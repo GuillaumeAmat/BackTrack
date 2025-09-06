@@ -8,7 +8,7 @@ export class Floor {
 
   #properties = {
     width: 1_000,
-    height: 10,
+    height: 9,
     depth: 0.5,
   };
 

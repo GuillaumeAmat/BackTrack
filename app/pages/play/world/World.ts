@@ -3,6 +3,7 @@ import { Environment } from './Environment';
 import { Resources } from '../utils/Resources';
 import { Floor } from './Floor';
 import { Car } from './Car';
+import { Score } from './Score';
 
 export class World {
   #resources: Resources;
@@ -11,6 +12,7 @@ export class World {
   #scene: Scene;
   #floor: Floor | null = null;
   #car: Car | null = null;
+  #score: Score | null = null;
 
   constructor(scene: Scene) {
     this.#scene = scene;
@@ -32,11 +34,16 @@ export class World {
         type: 'svg',
         path: '/game/svg/car.svg',
       },
+      interFont: {
+        type: 'font',
+        path: 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+      },
     });
 
     this.#resources.addEventListener('ready', () => {
       this.#floor = new Floor(this.#scene);
       this.#car = new Car(this.#scene);
+      this.#score = new Score(this.#scene);
 
       /**
        * Must be called after the meshes have been created,
@@ -74,5 +81,6 @@ export class World {
   public update() {
     this.#floor?.update();
     this.#car?.update();
+    this.#score?.update();
   }
 }
