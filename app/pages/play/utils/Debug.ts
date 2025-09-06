@@ -41,7 +41,7 @@ export class Debug {
 
     this.#gui = new GUI({
       width: 350,
-      closeFolders: false,
+      closeFolders: true,
     });
 
     this.loadFromLocalStorage();
