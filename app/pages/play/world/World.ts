@@ -4,9 +4,12 @@ import { Resources } from '../utils/Resources';
 import { Floor } from './Floor';
 import { Car } from './Car';
 import { Score } from './Score';
+import { LoadingOverlay } from './LoadingOverlay';
 
 export class World {
   #resources: Resources;
+  #loadingOverlay: LoadingOverlay;
+
   // eslint-disable-next-line no-unused-private-class-members
   #environment!: Environment;
   #scene: Scene;
@@ -16,6 +19,7 @@ export class World {
 
   constructor(scene: Scene) {
     this.#scene = scene;
+    this.#loadingOverlay = new LoadingOverlay(this.#scene);
 
     this.#resources = new Resources({
       menuTrack: {
@@ -75,10 +79,13 @@ export class World {
         isPlaying = false;
         music.pause();
       });
+
+      this.#loadingOverlay.hide();
     });
   }
 
   public update() {
+    this.#loadingOverlay?.update();
     this.#floor?.update();
     this.#car?.update();
     this.#score?.update();
