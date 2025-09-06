@@ -1,5 +1,6 @@
 {
-  "name": "nuxt-app",
+  "name": "backtrack",
+  "description": "Unofficial Back Market themed web video game",
   "type": "module",
   "private": true,
   "scripts": {
