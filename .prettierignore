@@ -1,0 +1,13 @@
+.idea
+.vscode
+
+*.log
+*.lock
+*.tgz
+
+.gitignore
+.prettierignore
+
+dist
+node_modules
+coverage
