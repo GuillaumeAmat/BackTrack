@@ -40,9 +40,10 @@ export class Debug {
     this.#active = true;
 
     this.#gui = new GUI({
-      width: 350,
       closeFolders: true,
     });
+
+    this.#gui.close();
 
     this.loadFromLocalStorage();
   }
