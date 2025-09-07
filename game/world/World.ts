@@ -2,7 +2,7 @@ import type { Scene } from 'three';
 import { Environment } from './Environment';
 import { Resources } from '../utils/Resources';
 import { Floor } from './Floor';
-import { Car } from './Car';
+import { Vehicle } from './Vehicle';
 import { Score } from './Score';
 import { LoadingOverlay } from './LoadingOverlay';
 
@@ -14,7 +14,7 @@ export class World {
   #environment!: Environment;
   #scene: Scene;
   #floor: Floor | null = null;
-  #car: Car | null = null;
+  #vehicle: Vehicle | null = null;
   #score: Score | null = null;
 
   constructor(scene: Scene) {
@@ -34,9 +34,9 @@ export class World {
         type: 'audio',
         path: '/game/audio/effect/select.opus',
       },
-      carShape: {
+      bmLogo: {
         type: 'svg',
-        path: '/game/svg/car.svg',
+        path: '/game/svg/bmLogo.svg',
       },
       interFont: {
         type: 'font',
@@ -46,7 +46,7 @@ export class World {
 
     this.#resources.addEventListener('ready', () => {
       this.#floor = new Floor(this.#scene);
-      this.#car = new Car(this.#scene);
+      this.#vehicle = new Vehicle(this.#scene);
       this.#score = new Score(this.#scene);
 
       /**
@@ -87,7 +87,7 @@ export class World {
   public update() {
     this.#loadingOverlay?.update();
     this.#floor?.update();
-    this.#car?.update();
+    this.#vehicle?.update();
     this.#score?.update();
   }
 }

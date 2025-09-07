@@ -4,7 +4,7 @@ import { Debug } from '../utils/Debug';
 import { Resources } from '../utils/Resources';
 import { createMeshFromSVG } from '../lib/createMeshFromSVG';
 
-export class Car {
+export class Vehicle {
   #resources: Resources;
   #scene: Scene;
   #group: Group | null = null;
@@ -32,7 +32,7 @@ export class Car {
       side: DoubleSide,
     });
 
-    this.createCar();
+    this.createMesh();
     this.createStuff();
     this.setupHelpers();
   }
@@ -70,11 +70,11 @@ export class Car {
     this.#scene.add(mesh);
   }
 
-  private createCar() {
-    const svgData = this.#resources.getSVGAsset('carShape');
+  private createMesh() {
+    const svgData = this.#resources.getSVGAsset('bmLogo');
 
     if (!svgData) {
-      console.warn('No SVG data found for the car.');
+      console.warn('No SVG data found for the vehicle.');
       return;
     }
 
@@ -87,7 +87,7 @@ export class Car {
 
   private async setupHelpers() {
     if (this.#debug.active) {
-      const folderName = 'Car';
+      const folderName = 'Vehicle';
       const guiFolder = this.#debug.gui.addFolder(folderName);
 
       this.#debugProperties = {
@@ -97,12 +97,12 @@ export class Car {
 
       if (this.#group) {
         const { BoxHelper } = await import('three');
-        const carHelper = new BoxHelper(this.#group, 0xffff00);
-        carHelper.visible = this.#debugProperties.DisplayHelper;
-        this.#scene.add(carHelper);
+        const helper = new BoxHelper(this.#group, 0xffff00);
+        helper.visible = this.#debugProperties.DisplayHelper;
+        this.#scene.add(helper);
 
         guiFolder.add(this.#debugProperties, 'DisplayHelper').onChange((value: boolean) => {
-          carHelper.visible = value;
+          helper.visible = value;
           this.#debug.save();
         });
       }
