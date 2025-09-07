@@ -748,6 +748,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fingerprintjs/botd@npm:^1.9.1":
+  version: 1.9.1
+  resolution: "@fingerprintjs/botd@npm:1.9.1"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 10/ade88f6bd4ae998c4adea21c12aab9e205182b2397093d93aa8596a0f38c4d4b6c2b9db8640e61a8d30e37d31c779425299f5b6781e8fcce6075cf4587da3a25
+  languageName: node
+  linkType: hard
+
 "@floating-ui/core@npm:^1.7.3":
   version: 1.7.3
   resolution: "@floating-ui/core@npm:1.7.3"
@@ -1741,6 +1750,48 @@ __metadata:
     prettier: "npm:^3.5.2"
     std-env: "npm:^3.8.0"
   checksum: 10/11e3d5fb6c7614fdd7505ef84c3686cabd7122b9adbdaba05e4c77fa73bef6a7f2e7183c5faf9f55217033346789280462d1f9531ccc274b26422c3c8030e67f
+  languageName: node
+  linkType: hard
+
+"@nuxtjs/robots@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "@nuxtjs/robots@npm:5.5.1"
+  dependencies:
+    "@fingerprintjs/botd": "npm:^1.9.1"
+    "@nuxt/kit": "npm:^4.0.3"
+    consola: "npm:^3.4.2"
+    defu: "npm:^6.1.4"
+    nuxt-site-config: "npm:^3.2.2"
+    pathe: "npm:^2.0.3"
+    pkg-types: "npm:^2.3.0"
+    sirv: "npm:^3.0.1"
+    std-env: "npm:^3.9.0"
+    ufo: "npm:^1.6.1"
+  checksum: 10/c594d6f97f8076cd63b96b2b37ecf7ec3d83906cf04d5ce7e89bd74e44333ec0c96d20a68fbe5467e3df7b5be9fa6c327df9e6513b15187ce0bef55f9d924072
+  languageName: node
+  linkType: hard
+
+"@nuxtjs/sitemap@npm:^7.4.3":
+  version: 7.4.3
+  resolution: "@nuxtjs/sitemap@npm:7.4.3"
+  dependencies:
+    "@nuxt/devtools-kit": "npm:^2.5.0"
+    "@nuxt/kit": "npm:^3.17.5"
+    chalk: "npm:^5.4.1"
+    defu: "npm:^6.1.4"
+    fast-xml-parser: "npm:^5.2.5"
+    h3-compression: "npm:^0.3.2"
+    nuxt-site-config: "npm:^3.2.2"
+    ofetch: "npm:^1.4.1"
+    pathe: "npm:^2.0.3"
+    pkg-types: "npm:^2.1.1"
+    radix3: "npm:^1.1.2"
+    semver: "npm:^7.7.2"
+    sirv: "npm:^3.0.1"
+    std-env: "npm:^3.9.0"
+    ufo: "npm:^1.6.1"
+    ultrahtml: "npm:^1.6.0"
+  checksum: 10/36b488acf3fea0d7b45da4aa3ca70f2a52bfe90de9d10c433e2ca1076635b3e082a24a6e638adde06d2c149911cd505e9639f9194d35212965c79e95a8d1463f
   languageName: node
   linkType: hard
 
@@ -3979,6 +4030,8 @@ __metadata:
     "@nuxt/test-utils": "npm:^3.19.2"
     "@nuxt/ui": "npm:^3.3.3"
     "@nuxtjs/html-validator": "npm:2.1.0"
+    "@nuxtjs/robots": "npm:^5.5.1"
+    "@nuxtjs/sitemap": "npm:^7.4.3"
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@tailwindcss/typography": "npm:^0.5.16"
     "@types/qrcode": "npm:^1"
@@ -4322,6 +4375,13 @@ __metadata:
     ansi-styles: "npm:^4.1.0"
     supports-color: "npm:^7.1.0"
   checksum: 10/cb3f3e594913d63b1814d7ca7c9bafbf895f75fbf93b92991980610dfd7b48500af4e3a5d4e3a8f337990a96b168d7eb84ee55efdce965e2ee8efc20f8c8f139
+  languageName: node
+  linkType: hard
+
+"chalk@npm:^5.4.1":
+  version: 5.6.0
+  resolution: "chalk@npm:5.6.0"
+  checksum: 10/f0e0646a72adbd0f6e73441d3872d7f2f40ba98052924f08a30c10634ec6b1e2cd19cc3c40cc21081dad640e2a1a2749030418571690b89bd7782babf7f89866
   languageName: node
   linkType: hard
 
@@ -5872,6 +5932,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-xml-parser@npm:^5.2.5":
+  version: 5.2.5
+  resolution: "fast-xml-parser@npm:5.2.5"
+  dependencies:
+    strnum: "npm:^2.1.0"
+  bin:
+    fxparser: src/cli/cli.js
+  checksum: 10/305017cff6968a34cbac597317be1516e85c44f650f30d982c84f8c30043e81fd38d39a8810d570136c921399dd43b9ac4775bdfbbbcfee96456f3c086b48bdd
+  languageName: node
+  linkType: hard
+
 "fastq@npm:^1.15.0, fastq@npm:^1.6.0":
   version: 1.19.1
   resolution: "fastq@npm:1.19.1"
@@ -6270,6 +6341,15 @@ __metadata:
   dependencies:
     duplexer: "npm:^0.1.2"
   checksum: 10/52d0bf586307082428b99f7b04d56d756d640e1f84d4a56debf9fb8c972d9db679143b067dd4024ebef42e9f6787e9dc8b9dcad344372b9dc87e55d942276f49
+  languageName: node
+  linkType: hard
+
+"h3-compression@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "h3-compression@npm:0.3.2"
+  peerDependencies:
+    h3: ^1.6.0
+  checksum: 10/7c28bc9929985b1c43f5a6606e7561c26c285d55677409fab403ab87d4239c696c4100e54080cba7acf07c115ab5572666e536c6d80d6cb76e6bb242b3d4a4de
   languageName: node
   linkType: hard
 
@@ -7886,6 +7966,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nuxt-site-config-kit@npm:3.2.2":
+  version: 3.2.2
+  resolution: "nuxt-site-config-kit@npm:3.2.2"
+  dependencies:
+    "@nuxt/kit": "npm:^3.17.5"
+    pkg-types: "npm:^2.1.0"
+    site-config-stack: "npm:3.2.2"
+    std-env: "npm:^3.9.0"
+    ufo: "npm:^1.6.1"
+  checksum: 10/eb826db858ec30e2361b3ebbaa01618ea4de04a223039da59ae9050ff2dac808550478f943298ddbae3aac43c71a187b0daaad131976e4ed5647946b6bc6e879
+  languageName: node
+  linkType: hard
+
+"nuxt-site-config@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "nuxt-site-config@npm:3.2.2"
+  dependencies:
+    "@nuxt/kit": "npm:^3.17.5"
+    nuxt-site-config-kit: "npm:3.2.2"
+    pathe: "npm:^2.0.3"
+    pkg-types: "npm:^2.1.0"
+    sirv: "npm:^3.0.1"
+    site-config-stack: "npm:3.2.2"
+    ufo: "npm:^1.6.1"
+  checksum: 10/923a5fe1f27c779781f01b12193ba2f6e2881f79960467aa6dd3ee2d263b8a724fe54df8ef61abe5e06f189e2b5a9a75536025743f6c92a7051b98102481a153
+  languageName: node
+  linkType: hard
+
 "nuxt@npm:^4.1.0":
   version: 4.1.0
   resolution: "nuxt@npm:4.1.0"
@@ -8507,7 +8615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pkg-types@npm:^2.1.0, pkg-types@npm:^2.2.0, pkg-types@npm:^2.3.0":
+"pkg-types@npm:^2.1.0, pkg-types@npm:^2.1.1, pkg-types@npm:^2.2.0, pkg-types@npm:^2.3.0":
   version: 2.3.0
   resolution: "pkg-types@npm:2.3.0"
   dependencies:
@@ -9652,6 +9760,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"site-config-stack@npm:3.2.2":
+  version: 3.2.2
+  resolution: "site-config-stack@npm:3.2.2"
+  dependencies:
+    ufo: "npm:^1.6.1"
+  peerDependencies:
+    vue: ^3
+  checksum: 10/6233570d0db65cd45648c476d6c84afef31c75d72ab030f98cfa4b62444a84fa0de526cb24f96075135994eefd2dd3e2611e4394ef7d55cfbbfbfea42cc2d89f
+  languageName: node
+  linkType: hard
+
 "slash@npm:^5.1.0":
   version: 5.1.0
   resolution: "slash@npm:5.1.0"
@@ -9908,6 +10027,13 @@ __metadata:
   dependencies:
     js-tokens: "npm:^9.0.1"
   checksum: 10/da1616f654f3ff481e078597b4565373a5eeed78b83de4a11a1a1b98292a9036f2474e528eff19b6eed93370428ff957a473827057c117495086436725d7efad
+  languageName: node
+  linkType: hard
+
+"strnum@npm:^2.1.0":
+  version: 2.1.1
+  resolution: "strnum@npm:2.1.1"
+  checksum: 10/d5fe6e4333cddc17569331048e403e876ffcf629989815f0359b0caf05dae9441b7eef3d7dd07427313ac8b3f05a8f60abc1f61efc15f97245dbc24028362bc9
   languageName: node
   linkType: hard
 

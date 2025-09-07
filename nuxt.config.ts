@@ -15,11 +15,38 @@ export default defineNuxtConfig({
     plugins: [glslPlugin()],
   },
 
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@nuxt/scripts',
+    '@nuxt/test-utils',
+    '@nuxt/ui',
+    '@nuxtjs/robots',
+
+    /**
+     * Must always be last
+     * See: https://sitemap.nuxtjs.org/fr/guide/setup
+     */
+    '@nuxtjs/sitemap',
+  ],
+
   pages: {
     pattern: ['**/*.vue', '!**/components/**', '!**/composables/**'],
   },
 
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', '@nuxt/test-utils', '@nuxt/ui'],
-
   css: ['~/assets/css/main.css'],
+
+  /**
+   * See: https://nuxtseo.com/docs/robots/guides/nuxt-config
+   */
+  robots: {
+    disallow: ['/*'],
+  },
+
+  /**
+   * See: https://sitemap.nuxtjs.org/fr/usage/sitemap-options
+   */
+  sitemap: {
+    exclude: ['/**'],
+  },
 });
