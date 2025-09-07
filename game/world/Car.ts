@@ -64,8 +64,8 @@ export class Car {
 
     const mesh = new Mesh(geometry, this.#material);
     mesh.rotation.x = -Math.PI / 2;
-    mesh.position.x = 0;
-    mesh.position.z = 3;
+    mesh.position.x = -3;
+    mesh.position.z = 2;
     mesh.position.y = 0;
     this.#scene.add(mesh);
   }
@@ -79,6 +79,9 @@ export class Car {
     }
 
     this.#group = createMeshFromSVG(svgData, { extrusionDepth: 50, material: this.#material, scale: 0.015 });
+    this.#group.position.x = 1;
+    this.#group.position.z = 0;
+    this.#group.rotation.z = -Math.PI / 2;
     this.#scene.add(this.#group);
   }
 

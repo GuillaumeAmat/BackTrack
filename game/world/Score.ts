@@ -43,8 +43,7 @@ export class Score {
       size: 1.2,
       material: this.#material,
     });
-    this.#mesh.position.set(0, 5, -6);
-    this.#mesh.rotation.y = Math.PI / 2;
+    this.#mesh.position.set(6, 6, 0);
     this.#scene.add(this.#mesh);
   }
 

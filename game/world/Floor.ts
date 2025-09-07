@@ -7,8 +7,8 @@ export class Floor {
   #material: MeshStandardMaterial;
 
   #properties = {
-    width: 1_000,
-    height: 9,
+    width: 9,
+    height: 1_000,
     depth: 0.5,
   };
 
@@ -29,7 +29,7 @@ export class Floor {
 
     this.#mesh = new Mesh(this.#geometry, this.#material);
     this.#mesh.receiveShadow = true;
-    this.#mesh.rotation.x = -Math.PI * 0.5;
+    this.#mesh.rotation.x = Math.PI * 0.5;
     this.#mesh.position.y = -this.#properties.depth / 2;
 
     this.#scene.add(this.#mesh);
