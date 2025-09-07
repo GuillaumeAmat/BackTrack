@@ -1,5 +1,6 @@
 import { Mesh, PlaneGeometry, ShaderMaterial, type Scene } from 'three';
 import { gsap } from 'gsap';
+import { BACKGROUND_COLOR_R, BACKGROUND_COLOR_G, BACKGROUND_COLOR_B } from '../constants';
 
 export class LoadingOverlay {
   #scene: Scene;
@@ -28,7 +29,7 @@ export class LoadingOverlay {
       uniform float uAlpha;
 
       void main() {
-        gl_FragColor = vec4(224.0, 224.0, 224.0, uAlpha);
+        gl_FragColor = vec4(${BACKGROUND_COLOR_R}.0, ${BACKGROUND_COLOR_G}.0, ${BACKGROUND_COLOR_B}.0, uAlpha);
       }
       `,
     });

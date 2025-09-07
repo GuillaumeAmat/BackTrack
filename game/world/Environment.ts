@@ -1,6 +1,7 @@
 import type { CubeTexture, Scene } from 'three';
 import { AmbientLight, Color, DirectionalLight, Mesh, MeshStandardMaterial } from 'three';
 import { Debug } from '../utils/Debug';
+import { BACKGROUND_COLOR } from '../constants';
 
 type EnvironmentMap = {
   intensity: number;
@@ -45,7 +46,7 @@ export class Environment {
   }
 
   private setupEnvironment() {
-    this.#scene.background = new Color('#e0e0e0');
+    this.#scene.background = new Color(BACKGROUND_COLOR);
 
     // this.#environmentMap.intensity = 0.4;
     // this.#environmentMap.texture = this.#resources.assets.environmentMapTexture as CubeTexture;
