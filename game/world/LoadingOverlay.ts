@@ -22,7 +22,13 @@ export class LoadingOverlay {
       },
       vertexShader: `
       void main() {
-        gl_Position = vec4(position, 1.0);
+        // For orthographic camera
+        gl_Position = vec4(position.x, position.y, -1.0, 1.0);
+        // End orthographic camera
+
+        // For perspective camera
+        // gl_Position = vec4(position, 1.0);
+        // End perspective camera
       }
       `,
       fragmentShader: `

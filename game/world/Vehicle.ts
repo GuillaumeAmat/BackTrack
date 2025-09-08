@@ -57,7 +57,7 @@ export class Vehicle {
 
     // const geometry = new ShapeGeometry(shape);
     const geometry = new ExtrudeGeometry([shape], {
-      depth: 0.7,
+      depth: 2,
       bevelEnabled: false,
       curveSegments: 32,
     });
