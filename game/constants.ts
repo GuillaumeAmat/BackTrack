@@ -22,3 +22,5 @@ export const BACKGROUND_COLOR = '#eeeeee';
 export const BACKGROUND_COLOR_R = '238';
 export const BACKGROUND_COLOR_G = '238';
 export const BACKGROUND_COLOR_B = '238';
+
+export const FRUSTUM = 30;

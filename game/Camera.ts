@@ -3,6 +3,7 @@ import { OrthographicCamera } from 'three';
 import { Sizes } from './utils/Sizes';
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Debug } from './utils/Debug';
+import { FRUSTUM } from './constants';
 
 export class Camera {
   #canvas: HTMLCanvasElement;
@@ -10,10 +11,6 @@ export class Camera {
   #scene: Scene;
   #sizes: Sizes;
   #debug: Debug;
-
-  #properties = {
-    frustumSize: 30,
-  };
 
   #controls?: OrbitControls;
 
@@ -31,10 +28,10 @@ export class Camera {
     const aspect = this.#sizes.width / this.#sizes.height;
 
     this.#camera = new OrthographicCamera(
-      (this.#properties.frustumSize * aspect) / -2,
-      (this.#properties.frustumSize * aspect) / 2,
-      this.#properties.frustumSize / 2,
-      this.#properties.frustumSize / -2,
+      (FRUSTUM * aspect) / -2,
+      (FRUSTUM * aspect) / 2,
+      FRUSTUM / 2,
+      FRUSTUM / -2,
       0.1,
       100,
     );
@@ -62,10 +59,10 @@ export class Camera {
 
     // For orthographic camera
     const aspect = this.#sizes.width / this.#sizes.height;
-    this.#camera.left = (-this.#properties.frustumSize * aspect) / 2;
-    this.#camera.right = (this.#properties.frustumSize * aspect) / 2;
-    this.#camera.top = this.#properties.frustumSize / 2;
-    this.#camera.bottom = -this.#properties.frustumSize / 2;
+    this.#camera.left = (-FRUSTUM * aspect) / 2;
+    this.#camera.right = (FRUSTUM * aspect) / 2;
+    this.#camera.top = FRUSTUM / 2;
+    this.#camera.bottom = -FRUSTUM / 2;
     // End orthographic camera
 
     this.#camera.updateProjectionMatrix();

@@ -1,7 +1,7 @@
 import type { CubeTexture, Scene } from 'three';
 import { AmbientLight, Color, DirectionalLight, Mesh, MeshStandardMaterial } from 'three';
 import { Debug } from '../utils/Debug';
-import { BACKGROUND_COLOR } from '../constants';
+import { BACKGROUND_COLOR, FRUSTUM } from '../constants';
 
 type EnvironmentMap = {
   intensity: number;
@@ -38,10 +38,15 @@ export class Environment {
 
     this.#sunLight = new DirectionalLight('#ffffff', 4);
     this.#sunLight.castShadow = true;
-    this.#sunLight.shadow.camera.far = 15;
-    this.#sunLight.shadow.mapSize.set(1024, 1024);
+    this.#sunLight.shadow.camera.left = -FRUSTUM;
+    this.#sunLight.shadow.camera.right = FRUSTUM;
+    this.#sunLight.shadow.camera.top = FRUSTUM / 2;
+    this.#sunLight.shadow.camera.bottom = -FRUSTUM / 2;
+    this.#sunLight.shadow.camera.far = 1_000;
+    this.#sunLight.shadow.mapSize.set(2048, 2048);
     this.#sunLight.shadow.normalBias = 0.05;
-    this.#sunLight.position.set(20, 20, 20);
+    this.#sunLight.position.set(20, 30, 20);
+
     this.#scene.add(this.#sunLight);
   }
 
@@ -96,7 +101,7 @@ export class Environment {
 
       if (this.#sunLight) {
         const { DirectionalLightHelper } = await import('three');
-        const directionalLightHelper = new DirectionalLightHelper(this.#sunLight, 5);
+        const directionalLightHelper = new DirectionalLightHelper(this.#sunLight, 5, 'red');
         directionalLightHelper.visible = this.#debugProperties.DisplayLightsHelpers;
         this.#scene.add(directionalLightHelper);
 
