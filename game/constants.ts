@@ -24,3 +24,6 @@ export const BACKGROUND_COLOR_G = '238';
 export const BACKGROUND_COLOR_B = '238';
 
 export const FRUSTUM = 30;
+
+export const VEHICLE_SIZE = 3;
+export const OBSTACLE_VEHICLE_SIZE_DIFF = 0.5;

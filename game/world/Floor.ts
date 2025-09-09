@@ -1,4 +1,5 @@
 import { Mesh, type Scene, BoxGeometry, MeshStandardMaterial } from 'three';
+import { OBSTACLE_VEHICLE_SIZE_DIFF } from '../constants';
 
 export class Floor {
   #scene: Scene;
@@ -9,7 +10,7 @@ export class Floor {
   #properties = {
     width: 9,
     height: 1_000,
-    depth: 0.5,
+    depth: OBSTACLE_VEHICLE_SIZE_DIFF,
   };
 
   public get mesh() {

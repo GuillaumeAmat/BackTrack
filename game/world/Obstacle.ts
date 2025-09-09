@@ -1,25 +1,26 @@
-import { MeshStandardMaterial, type Mesh, type Scene, DoubleSide } from 'three';
+import { DoubleSide, Group, type Mesh, type Scene, MeshStandardMaterial } from 'three';
 // import { MOODS } from '../constants';
 import { Debug } from '../utils/Debug';
 import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
 import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
 
 const material = new MeshStandardMaterial({
-  color: '#FC3BAB',
+  color: '#6FFCDC',
   // color: MOODS['mindaro-94'].value,
   metalness: 0.3,
   roughness: 0.4,
   side: DoubleSide,
 });
 
-export class Vehicle {
+export class Obstacle {
   #scene: Scene;
-  #mesh: Mesh | null = null;
+  #group: Group | null = null;
+  #meshes: Mesh[] = [];
 
   #properties = {
-    width: VEHICLE_SIZE,
-    height: VEHICLE_SIZE,
-    depth: VEHICLE_SIZE,
+    width: VEHICLE_SIZE - OBSTACLE_VEHICLE_SIZE_DIFF,
+    height: VEHICLE_SIZE - OBSTACLE_VEHICLE_SIZE_DIFF,
+    depth: VEHICLE_SIZE - OBSTACLE_VEHICLE_SIZE_DIFF,
     radius: 0.4,
   };
 
@@ -28,37 +29,43 @@ export class Vehicle {
     DisplayHelper: true,
   };
 
-  public get mesh() {
-    return this.#mesh;
-  }
-
   constructor(scene: Scene) {
     this.#scene = scene;
     this.#debug = Debug.getInstance();
 
-    this.createMesh();
+    this.createGroup();
     this.setupHelpers();
   }
 
-  private createMesh() {
+  private createGroup() {
     const { width, height, radius, depth } = this.#properties;
 
-    this.#mesh = createRoundedPlaneMesh(width, height, radius, {
+    const meshReference = createRoundedPlaneMesh(width, height, radius, {
       extrusionDepth: depth,
       material,
     });
 
-    this.#mesh.castShadow = true;
-    this.#mesh.position.x = 0;
-    this.#mesh.position.z = 0;
-    this.#mesh.position.y = height / 2 + OBSTACLE_VEHICLE_SIZE_DIFF;
+    meshReference.castShadow = true;
+    meshReference.position.z = -15;
 
-    this.#scene.add(this.#mesh);
+    for (let xIndex = 0; xIndex < 3; xIndex++) {
+      for (let yIndex = 0; yIndex < 3; yIndex++) {
+        const mesh = meshReference.clone();
+        mesh.position.x = xIndex * VEHICLE_SIZE - VEHICLE_SIZE;
+        mesh.position.y = yIndex * VEHICLE_SIZE + (VEHICLE_SIZE / 2 + OBSTACLE_VEHICLE_SIZE_DIFF);
+
+        this.#meshes.push(mesh);
+      }
+    }
+
+    this.#group = new Group();
+    this.#group.add(...this.#meshes);
+    this.#scene.add(this.#group);
   }
 
   private async setupHelpers() {
     if (this.#debug.active) {
-      const folderName = 'Vehicle';
+      const folderName = 'Obstacle';
       const guiFolder = this.#debug.gui.addFolder(folderName);
 
       this.#debugProperties = {
@@ -66,9 +73,9 @@ export class Vehicle {
         ...this.#debug.configFromLocaleStorage?.folders?.[folderName]?.controllers,
       };
 
-      if (this.#mesh) {
+      if (this.#group) {
         const { BoxHelper } = await import('three');
-        const helper = new BoxHelper(this.#mesh, 0xffff00);
+        const helper = new BoxHelper(this.#group, 0xffff00);
         helper.visible = this.#debugProperties.DisplayHelper;
         this.#scene.add(helper);
 

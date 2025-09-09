@@ -3,6 +3,7 @@ import { Environment } from './Environment';
 import { Resources } from '../utils/Resources';
 import { Floor } from './Floor';
 import { Vehicle } from './Vehicle';
+import { Obstacle } from './Obstacle';
 import { Score } from './Score';
 import { LoadingOverlay } from './LoadingOverlay';
 
@@ -15,6 +16,7 @@ export class World {
   #scene: Scene;
   #floor: Floor | null = null;
   #vehicle: Vehicle | null = null;
+  #obstacle: Obstacle | null = null;
   #score: Score | null = null;
 
   constructor(scene: Scene) {
@@ -34,10 +36,10 @@ export class World {
         type: 'audio',
         path: '/game/audio/effect/select.opus',
       },
-      bmLogo: {
-        type: 'svg',
-        path: '/game/svg/bmLogo.svg',
-      },
+      // bmLogo: {
+      //   type: 'svg',
+      //   path: '/game/svg/bmLogo.svg',
+      // },
       interFont: {
         type: 'font',
         path: 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
@@ -47,6 +49,7 @@ export class World {
     this.#resources.addEventListener('ready', () => {
       this.#floor = new Floor(this.#scene);
       this.#vehicle = new Vehicle(this.#scene);
+      this.#obstacle = new Obstacle(this.#scene);
       this.#score = new Score(this.#scene);
 
       /**
@@ -88,6 +91,7 @@ export class World {
     this.#loadingOverlay?.update();
     this.#floor?.update();
     this.#vehicle?.update();
+    this.#obstacle?.update();
     this.#score?.update();
   }
 }
