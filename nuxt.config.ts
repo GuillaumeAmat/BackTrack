@@ -36,6 +36,10 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  ui: {
+    colorMode: false,
+  },
+
   /**
    * See: https://nuxtseo.com/docs/robots/guides/nuxt-config
    */
