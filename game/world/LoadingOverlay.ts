@@ -9,6 +9,10 @@ export class LoadingOverlay {
   #mesh: Mesh;
 
   constructor(scene: Scene) {
+    const bgColorVec4Red = parseInt(BACKGROUND_COLOR_R, 10) / 255;
+    const bgColorVec4Green = parseInt(BACKGROUND_COLOR_G, 10) / 255;
+    const bgColorVec4Blue = parseInt(BACKGROUND_COLOR_B, 10) / 255;
+
     this.#scene = scene;
 
     this.#geometry = new PlaneGeometry(2, 2, 1, 1);
@@ -35,7 +39,7 @@ export class LoadingOverlay {
       uniform float uAlpha;
 
       void main() {
-        gl_FragColor = vec4(${BACKGROUND_COLOR_R}.0, ${BACKGROUND_COLOR_G}.0, ${BACKGROUND_COLOR_B}.0, uAlpha);
+        gl_FragColor = vec4(${bgColorVec4Red}, ${bgColorVec4Green}, ${bgColorVec4Blue}, uAlpha);
       }
       `,
     });
@@ -48,7 +52,8 @@ export class LoadingOverlay {
     if (this.#material.uniforms.uAlpha) {
       gsap.to(this.#material.uniforms.uAlpha, {
         value: 0,
-        duration: 2,
+        duration: 1.8,
+        ease: 'power2.out',
       });
     }
   }
