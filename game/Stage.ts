@@ -6,8 +6,13 @@ import { Camera } from './Camera';
 import { Renderer } from './utils/Renderer';
 import { World } from './world/World';
 import { Debug } from './utils/Debug';
+import { createActor, type Actor, type AnyActorLogic } from 'xstate';
+
+import { machine } from './machine';
 
 export class Stage {
+  #actor: Actor<AnyActorLogic>;
+
   #canvas: HTMLCanvasElement;
 
   #renderer: Renderer;
@@ -24,6 +29,14 @@ export class Stage {
     if (!window) {
       throw new Error('"Stage" can only be instanciated in a browser environment.');
     }
+
+    this.#actor = createActor(machine).start();
+
+    this.#actor.subscribe((state) => {
+      console.log(state.value);
+    });
+
+    // this.#actor.send({ type: 'play' });
 
     this.#scene = new Scene();
     this.#debug = new Debug();

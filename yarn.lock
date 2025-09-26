@@ -4050,6 +4050,7 @@ __metadata:
     vite-plugin-glsl: "npm:^1.5.1"
     vue: "npm:^3.5.20"
     vue-router: "npm:^4.5.1"
+    xstate: "npm:^5.22.0"
   languageName: unknown
   linkType: soft
 
@@ -11360,6 +11361,13 @@ __metadata:
   bin:
     xss: bin/xss
   checksum: 10/074ad54babac9dd5107466dbf30d3b871dbedae1f8e7b8f4e3b76d60da8b92bd0f66f18ccd26b8524545444ef784b78c526cee089a907aa904f83c8b8d7958f6
+  languageName: node
+  linkType: hard
+
+"xstate@npm:^5.22.0":
+  version: 5.22.0
+  resolution: "xstate@npm:5.22.0"
+  checksum: 10/94cb16456ea979571fab482e10957469d3603b1ed14baf38863bdb33e8d7eef081c0d4a1f32e782369745f826ec6e6c52657d8aa9c0427968804be53e27dd86a
   languageName: node
   linkType: hard
 
