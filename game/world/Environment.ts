@@ -57,10 +57,10 @@ export class Environment {
     // this.#environmentMap.texture = this.#resources.assets.environmentMapTexture as CubeTexture;
     // this.#environmentMap.texture.colorSpace = SRGBColorSpace;
     // this.#scene.environment = this.#environmentMap.texture;
-    // this.updateMaterial();
+    // this.updateMeshesMaterial();
   }
 
-  private updateMaterial() {
+  public updateMeshesMaterial() {
     this.#scene.traverse((child) => {
       if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
         child.material.envMap = this.#environmentMap.texture;

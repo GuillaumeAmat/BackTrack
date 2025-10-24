@@ -9,6 +9,9 @@ import { Debug } from './utils/Debug';
 import { createActor, type Actor, type AnyActorLogic } from 'xstate';
 
 import { machine } from './machine';
+import { LoadingOverlay } from './world/LoadingOverlay';
+import { Resources } from './utils/Resources';
+import { Environment } from './world/Environment';
 
 export class Stage {
   #actor: Actor<AnyActorLogic>;
@@ -17,13 +20,12 @@ export class Stage {
 
   #renderer: Renderer;
   #sizes: Sizes;
-  #time: Time;
-  // eslint-disable-next-line no-unused-private-class-members
-  #debug!: Debug;
 
   #scene: Scene;
   #camera: Camera;
-  #world: World;
+  #resources: Resources;
+  #loadingOverlay: LoadingOverlay;
+  #world!: World;
 
   constructor(canvas: HTMLCanvasElement) {
     if (!window) {
@@ -39,7 +41,8 @@ export class Stage {
     // this.#actor.send({ type: 'play' });
 
     this.#scene = new Scene();
-    this.#debug = new Debug();
+
+    new Debug();
 
     this.#sizes = new Sizes();
     this.#sizes.addEventListener('resize', () => {
@@ -56,15 +59,48 @@ export class Stage {
     });
 
     this.#canvas = canvas;
-
     this.#camera = new Camera(this.#scene, this.#canvas);
     this.#renderer = new Renderer(this.#scene, this.#canvas, this.#camera);
-    this.#world = new World(this.#scene);
+    this.#loadingOverlay = new LoadingOverlay(this.#scene);
 
-    this.#time = new Time();
-    this.#time.addEventListener('tick', () => {
+    this.#resources = new Resources({
+      interFont: {
+        type: 'font',
+        path: 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+      },
+      menuTrack: {
+        type: 'audio',
+        path: '/game/audio/track/menu.opus',
+      },
+      levelTrack: {
+        type: 'audio',
+        path: '/game/audio/track/level.opus',
+      },
+      selectEffect: {
+        type: 'audio',
+        path: '/game/audio/effect/select.opus',
+      },
+      // bmLogo: {
+      //   type: 'svg',
+      //   path: '/game/svg/bmLogo.svg',
+      // },
+    });
+
+    this.#resources.addEventListener('ready', () => {
+      const environment = new Environment(this.#scene);
+      this.#world = new World(this.#scene, environment);
+
+      this.#loadingOverlay.hide();
+    });
+
+    const time = new Time();
+    time.addEventListener('tick', () => {
       this.#camera.update();
-      this.#world.update();
+
+      this.#loadingOverlay.update();
+
+      this.#world?.update();
+
       this.#renderer.update();
     });
   }
