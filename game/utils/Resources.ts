@@ -1,7 +1,7 @@
-import { type CubeTexture, type Texture, type CubeTextureLoader, EventDispatcher, type TextureLoader } from 'three';
+import { type CubeTexture, type CubeTextureLoader, EventDispatcher, type Texture, type TextureLoader } from 'three';
 import type { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
 import type { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { SVGResult, SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
+import type { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js';
 
 type AssetName = string;
 type Asset =

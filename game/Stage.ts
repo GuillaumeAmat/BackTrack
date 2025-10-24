@@ -1,17 +1,16 @@
 import { Scene } from 'three';
+import { type Actor, type AnyActorLogic,createActor } from 'xstate';
 
+import { Camera } from './Camera';
+import { machine } from './machine';
+import { Debug } from './utils/Debug';
+import { Renderer } from './utils/Renderer';
+import { Resources } from './utils/Resources';
 import { Sizes } from './utils/Sizes';
 import { Time } from './utils/Time';
-import { Camera } from './Camera';
-import { Renderer } from './utils/Renderer';
-import { World } from './world/World';
-import { Debug } from './utils/Debug';
-import { createActor, type Actor, type AnyActorLogic } from 'xstate';
-
-import { machine } from './machine';
-import { LoadingOverlay } from './world/LoadingOverlay';
-import { Resources } from './utils/Resources';
 import { Environment } from './world/Environment';
+import { LoadingOverlay } from './world/LoadingOverlay';
+import { World } from './world/World';
 
 export class Stage {
   #actor: Actor<AnyActorLogic>;

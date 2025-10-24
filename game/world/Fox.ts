@@ -1,7 +1,8 @@
-import { Mesh, type AnimationAction, type Scene, AnimationMixer } from 'three';
-import { Resources } from '../utils/Resources';
-import { Debug } from '../utils/Debug';
+import { type AnimationAction, AnimationMixer,Mesh, type Scene } from 'three';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+import { Debug } from '../utils/Debug';
+import { Resources } from '../utils/Resources';
 import { Time } from '../utils/Time';
 
 export class Fox {

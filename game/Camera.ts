@@ -1,9 +1,10 @@
 import type { Scene } from 'three';
 import { OrthographicCamera } from 'three';
-import { Sizes } from './utils/Sizes';
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { Debug } from './utils/Debug';
+
 import { FRUSTUM } from './constants';
+import { Debug } from './utils/Debug';
+import { Sizes } from './utils/Sizes';
 
 export class Camera {
   #canvas: HTMLCanvasElement;

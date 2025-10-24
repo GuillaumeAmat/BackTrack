@@ -1,12 +1,12 @@
 import {
   type BufferGeometry,
-  ExtrudeGeometry,
-  Mesh,
-  ShapeGeometry,
-  type Material,
-  MeshBasicMaterial,
   DoubleSide,
+  ExtrudeGeometry,
+  type Material,
+  Mesh,
+  MeshBasicMaterial,
   Shape,
+  ShapeGeometry,
 } from 'three';
 
 type Options = {

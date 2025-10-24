@@ -1,8 +1,9 @@
-import { type Mesh, type Scene, DoubleSide, MeshStandardMaterial } from 'three';
+import { DoubleSide, type Mesh, MeshStandardMaterial, type Scene } from 'three';
+
+import { createTextMesh } from '../lib/createTextMesh';
 // import { MOODS } from '../constants';
 import { Debug } from '../utils/Debug';
 import { Resources } from '../utils/Resources';
-import { createTextMesh } from '../lib/createTextMesh';
 
 export class Score {
   #resources: Resources;

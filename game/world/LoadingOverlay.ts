@@ -1,6 +1,7 @@
-import { Mesh, PlaneGeometry, ShaderMaterial, type Scene } from 'three';
 import { gsap } from 'gsap';
-import { BACKGROUND_COLOR_R, BACKGROUND_COLOR_G, BACKGROUND_COLOR_B } from '../constants';
+import { Mesh, PlaneGeometry, type Scene,ShaderMaterial } from 'three';
+
+import { BACKGROUND_COLOR_B,BACKGROUND_COLOR_G, BACKGROUND_COLOR_R } from '../constants';
 
 export class LoadingOverlay {
   #scene: Scene;

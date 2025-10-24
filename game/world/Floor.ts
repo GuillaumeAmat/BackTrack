@@ -1,4 +1,5 @@
-import { Mesh, type Scene, BoxGeometry, MeshStandardMaterial } from 'three';
+import { BoxGeometry, Mesh, MeshStandardMaterial,type Scene } from 'three';
+
 import { OBSTACLE_VEHICLE_SIZE_DIFF } from '../constants';
 
 export class Floor {

@@ -1,8 +1,9 @@
-import { DoubleSide, Group, type Mesh, type Scene, MeshStandardMaterial } from 'three';
+import { DoubleSide, Group, type Mesh, MeshStandardMaterial,type Scene } from 'three';
+
+import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
+import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
 // import { MOODS } from '../constants';
 import { Debug } from '../utils/Debug';
-import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
-import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
 
 const material = new MeshStandardMaterial({
   color: '#6FFCDC',

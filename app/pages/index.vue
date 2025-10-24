@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue';
 
 import { definePageMeta, useSimpleHead } from '#imports';
-
 import { Stage } from '~~/game/Stage';
 
 definePageMeta({

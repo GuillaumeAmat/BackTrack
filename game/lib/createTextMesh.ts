@@ -1,11 +1,11 @@
 import {
   type BufferGeometry,
-  ExtrudeGeometry,
-  Mesh,
-  ShapeGeometry,
-  type Material,
-  MeshBasicMaterial,
   DoubleSide,
+  ExtrudeGeometry,
+  type Material,
+  Mesh,
+  MeshBasicMaterial,
+  ShapeGeometry,
 } from 'three';
 import type { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 

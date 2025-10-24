@@ -4,10 +4,10 @@ import {
   DoubleSide,
   ExtrudeGeometry,
   Group,
+  type Material,
   Mesh,
   MeshBasicMaterial,
   ShapeGeometry,
-  type Material,
 } from 'three';
 import { SVGLoader, type SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js';
 

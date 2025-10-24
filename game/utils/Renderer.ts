@@ -1,7 +1,8 @@
 import type { Scene } from 'three';
 import { CineonToneMapping, PCFSoftShadowMap, SRGBColorSpace, WebGLRenderer } from 'three';
-import { Sizes } from './Sizes';
+
 import type { Camera } from '../Camera';
+import { Sizes } from './Sizes';
 
 export class Renderer {
   #canvas: HTMLCanvasElement;

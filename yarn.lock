@@ -4040,6 +4040,7 @@ __metadata:
     "@vercel/speed-insights": "npm:^1.2.0"
     eslint: "npm:^9.34.0"
     eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-simple-import-sort: "npm:^12.1.1"
     gsap: "npm:^3.13.0"
     lil-gui: "npm:^0.20.0"
     nuxt: "npm:^4.1.0"
@@ -5605,6 +5606,15 @@ __metadata:
   peerDependencies:
     eslint: ">=8.44.0"
   checksum: 10/17f484f0b78a219f035c55983be12aebe0b08360bb3d236c7931e0afcdc857bbd0587bad8cd6748985ec91b2f588ea7ce3cb2ae107bcfa56e78aa54c73dc3834
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-simple-import-sort@npm:^12.1.1":
+  version: 12.1.1
+  resolution: "eslint-plugin-simple-import-sort@npm:12.1.1"
+  peerDependencies:
+    eslint: ">=5.0.0"
+  checksum: 10/2a690cea9243fbefa70345687bca8952f5e185fa459b7a8db687a908cc31082435cfee236c619d5245548fa5f89a2f2c4f8499f80512e048d2bedc60e3662d5a
   languageName: node
   linkType: hard
 

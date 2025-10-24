@@ -1,10 +1,11 @@
 import type { Scene } from 'three';
-import type { Environment } from './Environment';
+
 import { Resources } from '../utils/Resources';
+import type { Environment } from './Environment';
 import { Floor } from './Floor';
-import { Vehicle } from './Vehicle';
 import { Obstacle } from './Obstacle';
 import { Score } from './Score';
+import { Vehicle } from './Vehicle';
 
 export class World {
   #resources: Resources;
