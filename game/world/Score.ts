@@ -38,6 +38,12 @@ export class Score {
 
   private createScore() {
     const font = this.#resources.getFontAsset('interFont');
+
+    // FIXME Temporary workaround for font loading issue
+    if (!font) {
+      return;
+    }
+
     this.#mesh = createTextMesh('20720', font, {
       extrusionDepth: 0.05,
       size: 1.2,

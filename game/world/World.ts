@@ -34,27 +34,26 @@ export class World {
     this.#environment.updateMeshesMaterial();
 
     let isPlaying = false;
-    let music: HTMLAudioElement;
+    const music = this.#resources.getAudioAsset('menuTrack');
 
     window.addEventListener('keyup', (event) => {
       if (event.code !== 'Space') {
         return;
       }
 
-      if (!music) {
-        music = this.#resources.getAudioAsset('menuTrack');
+      if (music) {
         music.volume = 1;
         music.currentTime = 0;
       }
 
       if (!isPlaying) {
         isPlaying = true;
-        music.play();
+        music?.play();
         return;
       }
 
       isPlaying = false;
-      music.pause();
+      music?.pause();
     });
   }
 

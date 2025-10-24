@@ -8,10 +8,12 @@ type Asset =
   | {
       type: 'audio' | 'font' | 'gltf' | 'svg' | 'texture';
       path: string;
+      priority: 'low' | 'high';
     }
   | {
       type: 'cubeTexture';
       path: string[];
+      priority: 'low' | 'high';
     };
 
 type Assets = Record<AssetName, HTMLAudioElement | Font | GLTF | SVGResult | Texture | CubeTexture>;
@@ -26,9 +28,14 @@ type ReadyEvent = {
   type: 'ready';
 };
 
+type DoneEvent = {
+  type: 'done';
+};
+
 type ResourcesEvents = {
   loaded: LoadedEvent;
   ready: ReadyEvent;
+  done: DoneEvent;
 };
 
 export class Resources extends EventDispatcher<ResourcesEvents> {
@@ -43,8 +50,31 @@ export class Resources extends EventDispatcher<ResourcesEvents> {
   #textureLoader: TextureLoader | null = null;
   #cubeTextureLoader: CubeTextureLoader | null = null;
 
+  // The high priority assets are loaded
+  #isReady = false;
+
+  // All the assets are loaded
+  #isDone = false;
+
+  /**
+   * All loaded assets.
+   */
   get assets() {
     return this.#assets;
+  }
+
+  /**
+   * Indicates whether all high priority assets have been loaded.
+   */
+  get isReady() {
+    return this.#isReady;
+  }
+
+  /**
+   * Indicates whether all assets have been loaded.
+   */
+  get isDone() {
+    return this.#isDone;
   }
 
   constructor(assets: AssetsToLoad) {
@@ -62,7 +92,14 @@ export class Resources extends EventDispatcher<ResourcesEvents> {
   }
 
   private async loadAssets() {
-    const assetsToLoad = Object.values(this.#assetsToLoad);
+    const assetsToLoad = Object.values(this.#assetsToLoad).sort((a, b) => {
+      if (a.priority === b.priority) {
+        return 0;
+      }
+
+      return a.priority === 'high' ? -1 : 1;
+    });
+
     const hasFonts = assetsToLoad.some((asset) => asset.type === 'font');
     const hasGLTF = assetsToLoad.some((asset) => asset.type === 'gltf');
     const hasSVGs = assetsToLoad.some((asset) => asset.type === 'svg');
@@ -126,34 +163,59 @@ export class Resources extends EventDispatcher<ResourcesEvents> {
 
     this.dispatchEvent({ type: 'loaded', name });
 
-    if (Object.keys(this.#assets).length === Object.keys(this.#assetsToLoad).length) {
+    const loadedAssetsCount = Object.keys(this.#assets).length;
+    const assetsToLoadCount = Object.keys(this.#assetsToLoad).length;
+
+    if (!this.#isReady) {
+      const areHighPriorityAssetsLoaded = Object.entries(this.#assetsToLoad)
+        .filter(([, asset]) => asset.priority === 'high')
+        .every(([assetName]) => Object.hasOwn(this.#assets, assetName));
+
+      if (areHighPriorityAssetsLoaded) {
+        this.#isReady = true;
+
+        setTimeout(() => {
+          this.dispatchEvent({ type: 'ready' });
+        }, 0);
+      }
+    }
+
+    if (loadedAssetsCount === assetsToLoadCount) {
+      this.#isDone = true;
+
       setTimeout(() => {
-        this.dispatchEvent({ type: 'ready' });
+        this.dispatchEvent({ type: 'done' });
       }, 0);
     }
   }
 
   public getAudioAsset(name: string) {
+    if (!Object.hasOwn(this.#assets, name)) return null;
     return this.#assets[name] as HTMLAudioElement;
   }
 
   public getFontAsset(name: string) {
+    if (!Object.hasOwn(this.#assets, name)) return null;
     return this.#assets[name] as Font;
   }
 
   public getGLTFAsset(name: string) {
+    if (!Object.hasOwn(this.#assets, name)) return null;
     return this.#assets[name] as GLTF;
   }
 
   public getSVGAsset(name: string) {
+    if (!Object.hasOwn(this.#assets, name)) return null;
     return this.#assets[name] as SVGResult;
   }
 
   public getTextureAsset(name: string) {
+    if (!Object.hasOwn(this.#assets, name)) return null;
     return this.#assets[name] as Texture;
   }
 
   public getCubeTextureAsset(name: string) {
+    if (!Object.hasOwn(this.#assets, name)) return null;
     return this.#assets[name] as CubeTexture;
   }
 }

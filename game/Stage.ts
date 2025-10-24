@@ -67,18 +67,22 @@ export class Stage {
       interFont: {
         type: 'font',
         path: 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+        priority: 'high',
       },
       menuTrack: {
         type: 'audio',
         path: '/game/audio/track/menu.opus',
+        priority: 'low',
       },
       levelTrack: {
         type: 'audio',
         path: '/game/audio/track/level.opus',
+        priority: 'low',
       },
       selectEffect: {
         type: 'audio',
         path: '/game/audio/effect/select.opus',
+        priority: 'low',
       },
       // bmLogo: {
       //   type: 'svg',
@@ -91,6 +95,11 @@ export class Stage {
       this.#world = new World(this.#scene, environment);
 
       this.#loadingOverlay.hide();
+
+      // Wait for the resources' _done_ event, which ensures all assets are loaded
+      // before enabling any CTA and move forward with the game.
+      // Also check on `this.#resources.isDone` in case the event has been
+      // dispatched before reaching this point.
     });
 
     const time = new Time();
