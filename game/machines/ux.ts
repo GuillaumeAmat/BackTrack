@@ -2,7 +2,7 @@
 
 import { setup } from 'xstate';
 
-export const machine = setup({
+export const uxMachine = setup({
   types: {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     context: {} as {},
@@ -20,7 +20,7 @@ export const machine = setup({
   },
 }).createMachine({
   context: {},
-  id: 'Main',
+  id: 'UX',
   initial: 'Home',
   states: {
     Home: {

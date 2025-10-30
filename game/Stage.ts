@@ -1,8 +1,8 @@
 import { Scene } from 'three';
-import { type Actor, type AnyActorLogic,createActor } from 'xstate';
+import { type Actor, type AnyActorLogic, createActor } from 'xstate';
 
 import { Camera } from './Camera';
-import { machine } from './machine';
+import { uxMachine } from './machines/ux';
 import { Debug } from './utils/Debug';
 import { Renderer } from './utils/Renderer';
 import { Resources } from './utils/Resources';
@@ -13,7 +13,7 @@ import { LoadingOverlay } from './world/LoadingOverlay';
 import { World } from './world/World';
 
 export class Stage {
-  #actor: Actor<AnyActorLogic>;
+  #uxActor: Actor<AnyActorLogic>;
 
   #canvas: HTMLCanvasElement;
 
@@ -31,9 +31,9 @@ export class Stage {
       throw new Error('"Stage" can only be instanciated in a browser environment.');
     }
 
-    this.#actor = createActor(machine).start();
+    this.#uxActor = createActor(uxMachine).start();
 
-    this.#actor.subscribe((state) => {
+    this.#uxActor.subscribe((state) => {
       console.log(state.value);
     });
 
