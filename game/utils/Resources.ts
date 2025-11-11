@@ -83,15 +83,13 @@ export class Resources extends EventDispatcher<ResourcesEvents> {
     Resources.#instance = this;
 
     this.#assetsToLoad = assets;
-
-    this.loadAssets();
   }
 
   static getInstance() {
     return Resources.#instance;
   }
 
-  private async loadAssets() {
+  public async load() {
     const assetsToLoad = Object.values(this.#assetsToLoad).sort((a, b) => {
       if (a.priority === b.priority) {
         return 0;

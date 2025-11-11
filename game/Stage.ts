@@ -1,8 +1,10 @@
 import { Scene } from 'three';
-import { type Actor, type AnyActorLogic, createActor } from 'xstate';
+import { type Actor, type AnyActorLogic, createActor, fromPromise } from 'xstate';
+
+import { navigateTo } from '#app';
 
 import { Camera } from './Camera';
-import { uxMachine } from './machines/ux';
+import { stageMachine } from './Stage.machine';
 import { Debug } from './utils/Debug';
 import { Renderer } from './utils/Renderer';
 import { Resources } from './utils/Resources';
@@ -13,17 +15,8 @@ import { LoadingOverlay } from './world/LoadingOverlay';
 import { World } from './world/World';
 
 export class Stage {
-  #uxActor: Actor<AnyActorLogic>;
+  #actor: Actor<AnyActorLogic>;
 
-  #canvas: HTMLCanvasElement;
-
-  #renderer: Renderer;
-  #sizes: Sizes;
-
-  #scene: Scene;
-  #camera: Camera;
-  #resources: Resources;
-  #loadingOverlay: LoadingOverlay;
   #world!: World;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -31,38 +24,76 @@ export class Stage {
       throw new Error('"Stage" can only be instanciated in a browser environment.');
     }
 
-    this.#uxActor = createActor(uxMachine).start();
-
-    this.#uxActor.subscribe((state) => {
-      console.log(state.value);
-    });
-
-    // this.#actor.send({ type: 'play' });
-
-    this.#scene = new Scene();
-
     new Debug();
 
-    this.#sizes = new Sizes();
-    this.#sizes.addEventListener('resize', () => {
+    const scene = new Scene();
+    const camera = new Camera(scene, canvas);
+    const renderer = new Renderer(scene, canvas, camera);
+    const loadingOverlay = new LoadingOverlay(scene);
+
+    const sizes = new Sizes();
+    sizes.addEventListener('resize', () => {
       window.requestAnimationFrame(() => {
-        this.#camera.setSizesAndRatio();
+        camera.setSizesAndRatio();
 
         /**
          * Must be called after the camera has been resized,
          * as it updates the renderer's size and pixel ratio.
          * Also, it would take into account a re-positionning of the camera.
          */
-        this.#renderer.setSizesAndRatio();
+        renderer.setSizesAndRatio();
       });
     });
 
-    this.#canvas = canvas;
-    this.#camera = new Camera(this.#scene, this.#canvas);
-    this.#renderer = new Renderer(this.#scene, this.#canvas, this.#camera);
-    this.#loadingOverlay = new LoadingOverlay(this.#scene);
+    this.#actor = createActor(
+      stageMachine.provide({
+        actions: {
+          hideLoadingOverlay: () => {
+            loadingOverlay.hide();
+          },
+          navigateToLoadingErrorPage: () => {
+            navigateTo('/loading-error');
+          },
+          renderWorld: () => {
+            const environment = new Environment(scene);
+            this.#world = new World(scene, environment);
+          },
+        },
+        actors: {
+          loadResources: fromPromise(() => this.loadResources()),
+        },
+      }),
+      {
+        input: {},
+      },
+    );
 
-    this.#resources = new Resources({
+    // FIXME Debug only, to remove later
+    this.#actor.subscribe((state) => {
+      console.log({
+        state: state.value,
+        error: state.error,
+        context: state.context,
+      });
+    });
+
+    this.#actor.start();
+
+    // this.#actor.send({ type: 'play' });
+
+    const time = new Time();
+    time.addEventListener('tick', () => {
+      camera.update();
+      loadingOverlay.update();
+
+      this.#world?.update();
+
+      renderer.update();
+    });
+  }
+
+  private async loadResources() {
+    const resources = new Resources({
       interFont: {
         type: 'font',
         path: 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
@@ -89,27 +120,9 @@ export class Stage {
       // },
     });
 
-    this.#resources.addEventListener('ready', () => {
-      const environment = new Environment(this.#scene);
-      this.#world = new World(this.#scene, environment);
-
-      this.#loadingOverlay.hide();
-
-      // Wait for the resources' _done_ event, which ensures all assets are loaded
-      // before enabling any CTA and move forward with the game.
-      // Also check on `this.#resources.isDone` in case the event has been
-      // dispatched before reaching this point.
-    });
-
-    const time = new Time();
-    time.addEventListener('tick', () => {
-      this.#camera.update();
-
-      this.#loadingOverlay.update();
-
-      this.#world?.update();
-
-      this.#renderer.update();
+    return new Promise<void>((resolve) => {
+      resources.addEventListener('done', () => resolve());
+      resources.load();
     });
   }
 }
