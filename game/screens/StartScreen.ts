@@ -14,6 +14,8 @@ export class StartScreen {
   #promptMesh: Mesh | null = null;
   #material: MeshStandardMaterial;
 
+  #boundOnKeyUp: (event: KeyboardEvent) => void;
+
   constructor(stageActor: Actor<AnyActorLogic>, scene: Scene) {
     this.#stageActor = stageActor;
     this.#scene = scene;
@@ -35,6 +37,9 @@ export class StartScreen {
       metalness: 0.3,
       roughness: 0.4,
     });
+
+    // TODO Improve that...
+    this.#boundOnKeyUp = this.onKeyUp.bind(this);
 
     this.createText();
   }
@@ -64,11 +69,25 @@ export class StartScreen {
   }
 
   private show() {
+    this.registerControls();
     this.#group.visible = true;
   }
 
   private hide() {
     this.#group.visible = false;
+    this.unregisterControls();
+  }
+
+  private registerControls() {
+    window.addEventListener('keyup', this.#boundOnKeyUp);
+  }
+
+  private unregisterControls() {
+    window.removeEventListener('keyup', this.#boundOnKeyUp);
+  }
+
+  private onKeyUp() {
+    this.#stageActor.send({ type: 'start' });
   }
 
   public update() {
