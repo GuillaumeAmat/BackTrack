@@ -1,4 +1,4 @@
-import { DoubleSide, type Mesh, MeshStandardMaterial, type Scene } from 'three';
+import { DoubleSide, type Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
 
 import { createTextMesh } from '../lib/createTextMesh';
 // import { MOODS } from '../constants';
@@ -6,8 +6,9 @@ import { Debug } from '../utils/Debug';
 import { Resources } from '../utils/Resources';
 
 export class Score {
-  #resources: Resources;
+  #screenGroup: Group;
   #scene: Scene;
+  #resources: Resources;
   #mesh: Mesh | null = null;
   #material: MeshStandardMaterial;
 
@@ -20,7 +21,8 @@ export class Score {
     return this.#mesh;
   }
 
-  constructor(scene: Scene) {
+  constructor(screenGroup: Group, scene: Scene) {
+    this.#screenGroup = screenGroup;
     this.#scene = scene;
     this.#resources = Resources.getInstance();
     this.#debug = Debug.getInstance();
@@ -51,7 +53,7 @@ export class Score {
       material: this.#material,
     });
     this.#mesh.position.set(6, 6, 0);
-    this.#scene.add(this.#mesh);
+    this.#screenGroup.add(this.#mesh);
   }
 
   private async setupHelpers() {

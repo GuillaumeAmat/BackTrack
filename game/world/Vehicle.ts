@@ -1,4 +1,4 @@
-import { DoubleSide,type Mesh, MeshStandardMaterial, type Scene } from 'three';
+import { DoubleSide, type Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
 
 import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
 import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
@@ -14,6 +14,7 @@ const material = new MeshStandardMaterial({
 });
 
 export class Vehicle {
+  #screenGroup: Group;
   #scene: Scene;
   #mesh: Mesh | null = null;
 
@@ -37,11 +38,12 @@ export class Vehicle {
     return this.#mesh;
   }
 
-  constructor(scene: Scene) {
+  constructor(screenGroup: Group, scene: Scene) {
     if (!window) {
       throw new Error('"Vehicle" can only be instanciated in a browser environment.');
     }
 
+    this.#screenGroup = screenGroup;
     this.#scene = scene;
     this.#debug = Debug.getInstance();
 
@@ -64,7 +66,7 @@ export class Vehicle {
     this.#mesh.position.z = 0;
     this.#mesh.position.y = minY;
 
-    this.#scene.add(this.#mesh);
+    this.#screenGroup.add(this.#mesh);
   }
 
   private async setupHelpers() {

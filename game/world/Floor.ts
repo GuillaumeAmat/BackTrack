@@ -1,9 +1,8 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial,type Scene } from 'three';
+import { BoxGeometry, type Group, Mesh, MeshStandardMaterial } from 'three';
 
 import { OBSTACLE_VEHICLE_SIZE_DIFF } from '../constants';
 
 export class Floor {
-  #scene: Scene;
   #mesh: Mesh | null = null;
   #geometry: BoxGeometry;
   #material: MeshStandardMaterial;
@@ -18,9 +17,7 @@ export class Floor {
     return this.#mesh;
   }
 
-  constructor(scene: Scene) {
-    this.#scene = scene;
-
+  constructor(screenGroup: Group) {
     this.#geometry = new BoxGeometry(this.#properties.width, this.#properties.height, this.#properties.depth);
 
     this.#material = new MeshStandardMaterial({
@@ -34,7 +31,7 @@ export class Floor {
     this.#mesh.rotation.x = Math.PI * 0.5;
     this.#mesh.position.y = -this.#properties.depth / 2;
 
-    this.#scene.add(this.#mesh);
+    screenGroup.add(this.#mesh);
   }
 
   public update() {}

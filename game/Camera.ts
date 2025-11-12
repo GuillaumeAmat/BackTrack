@@ -36,7 +36,7 @@ export class Camera {
       0.1,
       100,
     );
-    this.#camera.position.set(-30, 30, 30);
+    this.#camera.position.set(0, 30, 30);
     this.#camera.lookAt(0, 0, 0);
     this.#scene.add(this.#camera);
 

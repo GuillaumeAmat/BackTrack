@@ -4,6 +4,9 @@ import { type Actor, type AnyActorLogic, createActor, fromPromise } from 'xstate
 import { navigateTo } from '#app';
 
 import { Camera } from './Camera';
+import { LoadingOverlay } from './LoadingOverlay';
+import { LevelScreen } from './screens/LevelScreen';
+import { LoadingScreen } from './screens/LoadingScreen';
 import { stageMachine } from './Stage.machine';
 import { Debug } from './utils/Debug';
 import { Renderer } from './utils/Renderer';
@@ -11,13 +14,13 @@ import { Resources } from './utils/Resources';
 import { Sizes } from './utils/Sizes';
 import { Time } from './utils/Time';
 import { Environment } from './world/Environment';
-import { LoadingOverlay } from './world/LoadingOverlay';
-import { World } from './world/World';
 
 export class Stage {
   #actor: Actor<AnyActorLogic>;
-
-  #world!: World;
+  #scene: Scene;
+  #resources: Resources;
+  #time: Time;
+  #environment: Environment | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     if (!window) {
@@ -26,10 +29,10 @@ export class Stage {
 
     new Debug();
 
-    const scene = new Scene();
-    const camera = new Camera(scene, canvas);
-    const renderer = new Renderer(scene, canvas, camera);
-    const loadingOverlay = new LoadingOverlay(scene);
+    this.#scene = new Scene();
+    const camera = new Camera(this.#scene, canvas);
+    const renderer = new Renderer(this.#scene, canvas, camera);
+    const loadingOverlay = new LoadingOverlay(this.#scene);
 
     const sizes = new Sizes();
     sizes.addEventListener('resize', () => {
@@ -45,60 +48,15 @@ export class Stage {
       });
     });
 
-    this.#actor = createActor(
-      stageMachine.provide({
-        actions: {
-          hideLoadingOverlay: () => {
-            loadingOverlay.hide();
-          },
-          navigateToLoadingErrorPage: () => {
-            navigateTo('/loading-error');
-          },
-          renderWorld: () => {
-            const environment = new Environment(scene);
-            this.#world = new World(scene, environment);
-          },
-        },
-        actors: {
-          loadResources: fromPromise(() => this.loadResources()),
-        },
-      }),
-      {
-        input: {},
-      },
-    );
-
-    // FIXME Debug only, to remove later
-    this.#actor.subscribe((state) => {
-      console.log({
-        state: state.value,
-        error: state.error,
-        context: state.context,
-      });
-    });
-
-    this.#actor.start();
-
-    // this.#actor.send({ type: 'play' });
-
-    const time = new Time();
-    time.addEventListener('tick', () => {
-      camera.update();
-      loadingOverlay.update();
-
-      this.#world?.update();
-
-      renderer.update();
-    });
-  }
-
-  private async loadResources() {
-    const resources = new Resources({
+    this.#resources = new Resources({
+      // High priorities, `ready` event will be emitted when loaded
       interFont: {
         type: 'font',
         path: 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
         priority: 'high',
       },
+
+      // Low priorities, `done` event will be emitted when loaded
       menuTrack: {
         type: 'audio',
         path: '/game/audio/track/menu.opus',
@@ -120,9 +78,97 @@ export class Stage {
       // },
     });
 
+    this.#actor = createActor(
+      stageMachine.provide({
+        actions: {
+          hideLoadingOverlay: () => {
+            loadingOverlay.hide();
+          },
+          navigateToLoadingErrorPage: () => {
+            navigateTo('/loading-error');
+          },
+          setupLoadingScreen: () => this.setupLoadingScreen(),
+          setupScreens: () => this.setupScreens(),
+        },
+        actors: {
+          loadResources: fromPromise(() => this.loadResources()),
+          waitForLowPriorityResources: fromPromise(() => this.waitForLowPriorityResources()),
+        },
+      }),
+      {
+        input: {},
+      },
+    );
+
+    // FIXME Debug only, to remove later
+    this.#actor.subscribe((state) => {
+      console.log({
+        state: state.value,
+        error: state.error,
+        context: state.context,
+      });
+    });
+
+    this.#actor.start();
+
+    this.#time = new Time();
+    this.#time.addEventListener('tick', () => {
+      camera.update();
+      loadingOverlay.update();
+      renderer.update();
+    });
+  }
+
+  /**
+   * Start loading the resources,
+   * and transition to the next state when the high priority resources are loaded.
+   */
+  private async loadResources() {
     return new Promise<void>((resolve) => {
-      resources.addEventListener('done', () => resolve());
-      resources.load();
+      this.#resources.addEventListener('ready', () => resolve());
+      this.#resources.load();
+    });
+  }
+
+  /**
+   * Wait for the low priority resources to be loaded,
+   * and transition to the next state.
+   */
+  private async waitForLowPriorityResources() {
+    return new Promise<void>((resolve) => {
+      if (this.#resources.isDone) resolve();
+      this.#resources.addEventListener('done', () => resolve());
+
+      // setTimeout(() => resolve(), 4_000);
+    });
+  }
+
+  private setupLoadingScreen() {
+    this.#environment = new Environment(this.#scene);
+
+    const loadingScreen = new LoadingScreen(this.#actor, this.#scene);
+
+    this.#time.addEventListener('tick', () => {
+      loadingScreen.update();
+    });
+  }
+
+  private setupScreens() {
+    if (!this.#environment) {
+      throw new Error('Environment must be initialized before setting up the screens.');
+    }
+
+    const levelScreen = new LevelScreen(this.#actor, this.#scene);
+
+    /**
+     * Must be called after the meshes have been created,
+     * as it traverses the scene to update the materials.
+     * If called before, it won't find any meshes to update.
+     */
+    this.#environment.updateMeshesMaterial();
+
+    this.#time.addEventListener('tick', () => {
+      levelScreen.update();
     });
   }
 }

@@ -21,18 +21,21 @@ export const stageMachine = setup({
   actions: {
     hideLoadingOverlay: () => {},
     navigateToLoadingErrorPage: () => {},
-    renderWorld: () => {},
+    setupLoadingScreen: () => {},
+    setupScreens: () => {},
   },
   actors: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     loadResources: undefined as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    waitForLowPriorityResources: undefined as any,
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QGUAuBDGA6N6BOqAxAA4A26AngNoAMAuoqMQPawCWqbzAdoyAB6IALADYsAdgCsAZgBMATnFzx8gBxCAjBqEAaEBUQbpkrEOlrVI2TUlHVUgL4O9ubABlm6CG25RCEHjAsHwA3ZgBrINcgjy8fKARQ5gBjdE4eWjpMvhZ2dN4kAUR5aSwbaRpLK3EzGhK9AwQAWnMy8XEFEUkReSFJGllZEScXDHdPb19CMDw8ZjwsMjSAM3mAWxwxmIn4xO4w1PzM7MLcji4C0EEEaVusNSFxERVZSXENd4bEJo+aLDkjEJKlZpFpVCMQNEsABZMDcACuJHI1HoOVY5x4fGusnEf1UlXMsnM6hxki+N2kYmU0nsNCMA3xQghUNhCMIpDAXhmACNPHgICcmOj8ljDB8sJJuqoNCIjDSRJVyVZ5BL5LYFUJrEI1bJmVssAAVeGoeZsdCkQjc9DJcKCkBnEWFbEiVRYTpvDQ0Z40SqqcmvMT2ERdfHyEE0cR6zBBI0mvBmi1LFEMU7Ci6ihAKjQSkRAx7afrvMn6RC3Kk4mm4+k4kpR9yciA8vkQQhrOHwu0O9NOxCybRYT1dXHyOzaqzkySaUxCPq9T2yIPyOsxMAhMCJ9Dw2BgTtpzE9hCWEyvIGSIa50Gacll-4V2nV8HOSH6tyr9fTbgC1GpvLdq7FftZWkd4OjDDVdBLBBJ2zGc+hEaQ+jPeVlywAAFTdt0IPA4HhNtd1-fd-0PBU3VxVRVCJRQfV6f1uiwIMQzqcMnhQ9CtzAQgAEd4Q4fCMUuIpDyUf4ZW0YD1EeYxyU1IQJTPM8aGJOp5CGFDkGSeYOO4MB+FQPjHSI2VZIjEo+xJGRuiVIx6O1AZc3xComSfKF1M0whYHQNd9L-QTaVMYMXQ+eQ1B9aRySkbMEKkORFO0HFH1GaMcE8+IAAJYA07DCG03TvMIwSzzENRJGCvsIsZcLbH+R5uhKmoungpwn24ZhG3gQpojRAiBOuH43VEXEhg6OlJHIyzIJaSobKMIK1V9SNnP1XACC6-iMw0BQ3RpT1tB9ErNDCyChFdDQSh9IlVBKfFZCcxLxjiXxVoMwSOjkhCYrqDRRtBckmkGGDLu1KQfXECiFxQ1l4Senzrg2lULp2oEbDnQ7GhvGxhs9QGa2GRaktjU1zWh-LriR-5JSUQKI0sDRr2s8iFHkSp+iZ9ppBQ18uTwXl8AgYmetLN43RK0avXMTUFGLRplVvfoXRux4ukkDm31IfmM3eUpLAojbKVuAZacg9G3gUY7gIUCj2bx7A2O3dWD2CkxF3giocTpEQ6a11RQTqGQPknXG7qiTKwHtojFFkvsSq0EqcWOpUIwHQtc1eb3HGtqIUt8dKQ7DwT5dvGk6T7LQa0q7MIxqJQVEuoZlYzrBYkmKBUpmOY8Dz643jEHoKNnCMNHUQ3Gh+NUJQjGhHgXeCvVEJqHCAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QGUAuBDGA6N6BOqAxAA4A26AngNoAMAuoqMQPawCWqbzAdoyAB6IALADYsAdgCsAZgBMATnFzx8gBxCAjBqEAaEBUQbpkrEOlrVI2TUlHVUgL4O9ubLgIACUs3QQ23KEIIHjAsfwA3ZgBrUNdYjE9vX38oBAjmAGN0Th5aOjy+FnYc3iQBRHlpLBtpGlV5eVlZDRoaaWk9AwQAWmkhISxbVVVamiE68dUnFww3BNQvHz8AwjA8PGY8LDJsgDNNgFscWfj8BaTl1PSskryCsqKOLlLQQQR2sRaacXqNRsl5CJdPpEN0hOIxG1WhphvVxKJZCJpiA4lgALJgbgAVxI5Go9EKrCePD4b1k4hoWFUdXMsnM6nJkk6iA+WGU0nsNCMNFk1KEyNRGOxhFIYF8awARj48BB7kwiSVSYYNOJBpIRKoNCIjByRHVmQgrPJBvJbHqhNYhKbZAKTlgACpY1CbNjoUiECXoDJROUgR6KspkjVYBQiSTiFoiCl1VQG2TqqkQsPUwF0762zChR3OvCu907fEMB4K55Kw1cwZAsYRoSSb4aJkg97SMTsznc8mVDPYAAyYogkulEEIB0xWN9-tLgcQzQGkfDNHkditVgNkk0pn6AM0PPsInk3dCffCYHz6CxsDAE5LJOnCEsJnj40kiKB0m0GgNrLbFI7U2cKJ2sep6rNwsoEsWxRTq8FTaFg2rSBG4ihuawJdOuGibrWIh9JIL66oeWAAArnpehB4HAWKjteUG3jB956iGFLDHSiitPIaEzgme7JouVi1BChEkReYCEAAjliHA0cSLzlPeShslq2iIeo4LGAaFoDHh8bWPSi6NEiAGosgGSbKJ3BgPwqDSQG9HagM3yVM0DIyOqBoIVSVo8kC1K1PyRl2iZZmELA6AnjZ0FyZypgiLFmoqGorQdE2UiYX0UhyG02jkv+MyZjgYUpB4sCmRRhAWVZEV0XJL5iGoAKNCqQxjAaqVsuC6oAvCYY4YRPZLCkQQhGE3CRDExz5f1yQBGko2ZNkzx3BB8q0bJbxCKoVJ-LWHHWDQerfAaYKYS+qgyPIXI-El4h9QNKxrBsWw7Kg+x4EcqJTZcs2RDci30FVa0smGEh1iofwUkC8ZHQ2Jj1DUqiIhSVpqE4AHcMwA7wGUcSEqtZbdBoshYKadZ8RtrkXSIR16idkj2MhrGiLlgH5e4qC4zJZaE8adKaly4w2BxRgaZtfyjLzlTUrI-l5XMZyLNNUAc7ZcnIWqfQqpl76-EdtgDNY+5yBal02IRQpYsrkVvNzIYci02itNuwtNqyNjIVydS7Sohmy1mToum6lvVetrRsnhSgai0Pzal+RhUgjDR1HWF3iEofX9oO+AQEHgPvOGIYAnT+3mBaCiNl0RpsvG+0I-0EJ4enJ6kDnZYRlUlgI4TLbtDyn4uy21ThgoG2IQoCPSEJpFgC3d4NLDEKAj35JclTLtx8M76LjITWiIRQUUTP9GKPrDZLqf5Ibe53xYA23yQ3TiGSHvhUBMVpXT5BnN3hqRNyByXLNC0J2VqthqipzUioeoiIn4BUmndKAHgHqbEPjVCEIYzC2AaoTQWusKzNAXI7IwL4DywN7PAlBbxjDVH6InYw2gqwcWhhxaoUZazKEpu+CeqMgA */
   context: {},
 
   id: 'Stage',
-  initial: 'Loading',
+  initial: 'Start loading',
 
   states: {
     Start: {
@@ -45,13 +48,14 @@ export const stageMachine = setup({
       },
     },
 
-    Loading: {
+    'Start loading': {
       invoke: {
         src: 'loadResources',
 
         onDone: {
-          target: 'Start',
+          target: 'Loading',
           reenter: true,
+          actions: 'setupLoadingScreen',
         },
 
         onError: {
@@ -60,7 +64,7 @@ export const stageMachine = setup({
         },
       },
 
-      exit: ['renderWorld', 'hideLoadingOverlay'],
+      exit: ['hideLoadingOverlay'],
     },
 
     Menu: {
@@ -140,6 +144,16 @@ export const stageMachine = setup({
 
     'Loading error': {
       entry: 'navigateToLoadingErrorPage',
+    },
+
+    Loading: {
+      invoke: {
+        src: 'waitForLowPriorityResources',
+        onDone: 'Start',
+        onError: 'Loading error',
+      },
+
+      exit: 'setupScreens',
     },
   },
 });

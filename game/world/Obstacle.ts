@@ -1,4 +1,4 @@
-import { DoubleSide, Group, type Mesh, MeshStandardMaterial,type Scene } from 'three';
+import { DoubleSide, Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
 
 import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
 import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
@@ -14,6 +14,7 @@ const material = new MeshStandardMaterial({
 });
 
 export class Obstacle {
+  #screenGroup: Group;
   #scene: Scene;
   #group: Group | null = null;
   #meshes: Mesh[] = [];
@@ -30,7 +31,8 @@ export class Obstacle {
     DisplayHelper: true,
   };
 
-  constructor(scene: Scene) {
+  constructor(screenGroup: Group, scene: Scene) {
+    this.#screenGroup = screenGroup;
     this.#scene = scene;
     this.#debug = Debug.getInstance();
 
@@ -61,7 +63,7 @@ export class Obstacle {
 
     this.#group = new Group();
     this.#group.add(...this.#meshes);
-    this.#scene.add(this.#group);
+    this.#screenGroup.add(this.#group);
   }
 
   private async setupHelpers() {
