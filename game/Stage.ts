@@ -5,8 +5,15 @@ import { navigateTo } from '#app';
 
 import { Camera } from './Camera';
 import { LoadingOverlay } from './LoadingOverlay';
+import { LeaderboardScreen } from './screens/LeaderboardScreen';
 import { LevelScreen } from './screens/LevelScreen';
 import { LoadingScreen } from './screens/LoadingScreen';
+import { MenuScreen } from './screens/MenuScreen';
+import { PauseScreen } from './screens/PauseScreen';
+import { SavingScoreScreen } from './screens/SavingScoreScreen';
+import { ScoreScreen } from './screens/ScoreScreen';
+import { StartScreen } from './screens/StartScreen';
+import { TutorialScreen } from './screens/TutorialScreen';
 import { stageMachine } from './Stage.machine';
 import { Debug } from './utils/Debug';
 import { Renderer } from './utils/Renderer';
@@ -158,7 +165,14 @@ export class Stage {
       throw new Error('Environment must be initialized before setting up the screens.');
     }
 
+    const startScreen = new StartScreen(this.#actor, this.#scene);
     const levelScreen = new LevelScreen(this.#actor, this.#scene);
+    const menuScreen = new MenuScreen(this.#actor, this.#scene);
+    const tutorialScreen = new TutorialScreen(this.#actor, this.#scene);
+    const leaderboardScreen = new LeaderboardScreen(this.#actor, this.#scene);
+    const pauseScreen = new PauseScreen(this.#actor, this.#scene);
+    const scoreScreen = new ScoreScreen(this.#actor, this.#scene);
+    const savingScoreScreen = new SavingScoreScreen(this.#actor, this.#scene);
 
     /**
      * Must be called after the meshes have been created,
@@ -168,7 +182,14 @@ export class Stage {
     this.#environment.updateMeshesMaterial();
 
     this.#time.addEventListener('tick', () => {
+      startScreen.update();
       levelScreen.update();
+      menuScreen.update();
+      tutorialScreen.update();
+      leaderboardScreen.update();
+      pauseScreen.update();
+      scoreScreen.update();
+      savingScoreScreen.update();
     });
   }
 }
