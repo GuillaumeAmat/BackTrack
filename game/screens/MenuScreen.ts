@@ -15,6 +15,8 @@ export class MenuScreen {
   #leaderboardMesh: Mesh | null = null;
   #material: MeshStandardMaterial;
 
+  #menuTrack: HTMLAudioElement | null = null;
+
   constructor(stageActor: Actor<AnyActorLogic>, scene: Scene) {
     this.#stageActor = stageActor;
     this.#scene = scene;
@@ -30,6 +32,8 @@ export class MenuScreen {
         this.hide();
       }
     });
+
+    this.#menuTrack = this.#resources.getAudioAsset('menuTrack');
 
     this.#material = new MeshStandardMaterial({
       color: '#FBD954',
@@ -72,12 +76,29 @@ export class MenuScreen {
     this.#group.add(this.#leaderboardMesh);
   }
 
+  private playMenuTrack() {
+    if (!this.#menuTrack) return;
+
+    this.#menuTrack.loop = true;
+    this.#menuTrack.volume = 1;
+    this.#menuTrack.currentTime = 0;
+    this.#menuTrack.play();
+  }
+
+  private pauseMenuTrack() {
+    if (!this.#menuTrack) return;
+
+    this.#menuTrack.pause();
+  }
+
   private show() {
     this.#group.visible = true;
+    this.playMenuTrack();
   }
 
   private hide() {
     this.#group.visible = false;
+    this.pauseMenuTrack();
   }
 
   public update() {
