@@ -18,10 +18,10 @@ export const MOODS = {
   'light-purple-80': { value: '#611fa3' },
 };
 
-export const BACKGROUND_COLOR = '#eeeeee';
-export const BACKGROUND_COLOR_R = '238';
-export const BACKGROUND_COLOR_G = '238';
-export const BACKGROUND_COLOR_B = '238';
+export const BACKGROUND_COLOR = '#333333';
+export const BACKGROUND_COLOR_R = '51';
+export const BACKGROUND_COLOR_G = '51';
+export const BACKGROUND_COLOR_B = '51';
 
 export const FRUSTUM = 30;
 

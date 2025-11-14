@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 
 import { definePageMeta, useSimpleHead } from '#imports';
+import { BACKGROUND_COLOR } from '~~/game/constants';
 import { Stage } from '~~/game/Stage';
 
 definePageMeta({
@@ -11,6 +12,12 @@ definePageMeta({
 useSimpleHead({
   title: 'BackTrack',
   description: 'Unofficial Back Market themed web video game',
+  htmlAttrs: {
+    style: `background-color: ${BACKGROUND_COLOR};`,
+  },
+  bodyAttrs: {
+    style: `background-color: ${BACKGROUND_COLOR};`,
+  },
 });
 
 const canvas = ref<HTMLCanvasElement>();

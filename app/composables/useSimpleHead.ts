@@ -23,6 +23,16 @@ interface UseSimpleHeadOptions {
    * @default true
    */
   suffixedTitle?: boolean;
+
+  /**
+   * Same `htmlAttrs` as in `useHead`
+   */
+  htmlAttrs?: Record<string, string>;
+
+  /**
+   * Same `bodyAttrs` as in `useHead`
+   */
+  bodyAttrs?: Record<string, string>;
 }
 
 export function useSimpleHead({
@@ -30,9 +40,12 @@ export function useSimpleHead({
   title = 'BackTrack',
   description,
   suffixedTitle = true,
+  htmlAttrs = {},
+  bodyAttrs = {},
 }: UseSimpleHeadOptions) {
   return useHead({
-    htmlAttrs: { lang },
+    htmlAttrs: { ...htmlAttrs, lang },
+    bodyAttrs: { ...bodyAttrs },
 
     link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
 
