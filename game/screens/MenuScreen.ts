@@ -2,6 +2,7 @@ import { Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
 import type { Actor, AnyActorLogic } from 'xstate';
 
 import { createTextMesh } from '../lib/createTextMesh';
+import { Debug } from '../utils/Debug';
 import { Resources } from '../utils/Resources';
 
 export class MenuScreen {
@@ -17,10 +18,16 @@ export class MenuScreen {
 
   #menuTrack: HTMLAudioElement | null = null;
 
+  #debug: Debug;
+  #debugProperties = {
+    DisableMenuTrack: false,
+  };
+
   constructor(stageActor: Actor<AnyActorLogic>, scene: Scene) {
     this.#stageActor = stageActor;
     this.#scene = scene;
     this.#resources = Resources.getInstance();
+    this.#debug = Debug.getInstance();
 
     this.#group = new Group();
     this.#scene.add(this.#group);
@@ -42,6 +49,7 @@ export class MenuScreen {
     });
 
     this.createText();
+    this.setupHelpers();
   }
 
   private createText() {
@@ -77,10 +85,10 @@ export class MenuScreen {
   }
 
   private playMenuTrack() {
-    if (!this.#menuTrack) return;
+    if (!this.#menuTrack || this.#debugProperties.DisableMenuTrack) return;
 
     this.#menuTrack.loop = true;
-    this.#menuTrack.volume = 1;
+    this.#menuTrack.volume = 0.6;
     this.#menuTrack.currentTime = 0;
     this.#menuTrack.play();
   }
@@ -99,6 +107,26 @@ export class MenuScreen {
   private hide() {
     this.#group.visible = false;
     this.pauseMenuTrack();
+  }
+
+  private setupHelpers() {
+    if (this.#debug.active) {
+      const folderName = 'MenuScreen';
+      const guiFolder = this.#debug.gui.addFolder(folderName);
+
+      this.#debugProperties = {
+        ...this.#debugProperties,
+        ...this.#debug.configFromLocaleStorage?.folders?.[folderName]?.controllers,
+      };
+
+      guiFolder.add(this.#debugProperties, 'DisableMenuTrack').onChange((value: boolean) => {
+        this.#debug.save();
+
+        if (value && this.#menuTrack && !this.#menuTrack.paused) {
+          this.pauseMenuTrack();
+        }
+      });
+    }
   }
 
   public update() {
