@@ -1,8 +1,8 @@
 import type { CubeTexture, Scene } from 'three';
 import { AmbientLight, Color, DirectionalLight, Mesh, MeshStandardMaterial } from 'three';
 
-import { BACKGROUND_COLOR, FRUSTUM } from '../constants';
-import { Debug } from '../utils/Debug';
+import { BACKGROUND_COLOR, FRUSTUM } from './constants';
+import { Debug } from './utils/Debug';
 
 type EnvironmentMap = {
   intensity: number;

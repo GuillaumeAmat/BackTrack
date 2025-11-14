@@ -4,6 +4,7 @@ import { type Actor, type AnyActorLogic, createActor, fromPromise } from 'xstate
 import { navigateTo } from '#app';
 
 import { Camera } from './Camera';
+import { Environment } from './Environment';
 import { LoadingOverlay } from './LoadingOverlay';
 import { LeaderboardScreen } from './screens/LeaderboardScreen';
 import { LevelScreen } from './screens/LevelScreen';
@@ -20,7 +21,6 @@ import { Renderer } from './utils/Renderer';
 import { Resources } from './utils/Resources';
 import { Sizes } from './utils/Sizes';
 import { Time } from './utils/Time';
-import { Environment } from './world/Environment';
 
 export class Stage {
   #actor: Actor<AnyActorLogic>;
