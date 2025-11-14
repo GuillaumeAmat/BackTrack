@@ -12,6 +12,7 @@ definePageMeta({
 useSimpleHead({
   title: 'BackTrack',
   description: 'Unofficial Back Market themed web video game',
+  suffixedTitle: false,
   htmlAttrs: {
     style: `background-color: ${BACKGROUND_COLOR};`,
   },
