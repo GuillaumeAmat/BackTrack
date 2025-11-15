@@ -21,6 +21,7 @@ export class LeaderboardScreen {
     this.#resources = Resources.getInstance();
 
     this.#group = new Group();
+    this.#group.position.set(0, 30, 0);
     this.#scene.add(this.#group);
 
     this.#stageActor.subscribe((state) => {
@@ -55,11 +56,15 @@ export class LeaderboardScreen {
     this.#titleMesh.position.set(0, 4, 0);
     this.#group.add(this.#titleMesh);
 
-    this.#scoresMesh = createTextMesh('1. Player1 - 1000\n2. Player2 - 800\n3. Player3 - 600\n4. Player4 - 400\n5. Player5 - 200', font, {
-      extrusionDepth: 0.05,
-      size: 0.8,
-      material: this.#material,
-    });
+    this.#scoresMesh = createTextMesh(
+      '1. Player1 - 1000\n2. Player2 - 800\n3. Player3 - 600\n4. Player4 - 400\n5. Player5 - 200',
+      font,
+      {
+        extrusionDepth: 0.05,
+        size: 0.8,
+        material: this.#material,
+      },
+    );
     this.#scoresMesh.position.set(0, 1, 0);
     this.#group.add(this.#scoresMesh);
 

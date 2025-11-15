@@ -22,6 +22,7 @@ export class TutorialScreen {
     this.#resources = Resources.getInstance();
 
     this.#group = new Group();
+    this.#group.position.set(0, 30, 0);
     this.#scene.add(this.#group);
 
     this.#stageActor.subscribe((state) => {
@@ -56,11 +57,15 @@ export class TutorialScreen {
     this.#titleMesh.position.set(0, 4, 0);
     this.#group.add(this.#titleMesh);
 
-    this.#commandsMesh = createTextMesh('Use gamepad to control vehicle\nCooperative 2-player game\nAvoid obstacles, collect points', font, {
-      extrusionDepth: 0.05,
-      size: 0.7,
-      material: this.#material,
-    });
+    this.#commandsMesh = createTextMesh(
+      'Use gamepad to control vehicle\nCooperative 2-player game\nAvoid obstacles, collect points',
+      font,
+      {
+        extrusionDepth: 0.05,
+        size: 0.7,
+        material: this.#material,
+      },
+    );
     this.#commandsMesh.position.set(0, 1, 0);
     this.#group.add(this.#commandsMesh);
 

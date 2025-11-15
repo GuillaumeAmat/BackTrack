@@ -28,7 +28,7 @@ export class Camera {
 
     this.#camera = new PerspectiveCamera(35, aspect, 0.1, 100);
     this.#camera.position.set(0, 30, 30);
-    this.#camera.lookAt(0, 0, 0);
+    this.#camera.lookAt(0, 30, 0);
     this.#scene.add(this.#camera);
 
     this.setupControls();
@@ -41,6 +41,8 @@ export class Camera {
 
       this.#controls = new OrbitControls(this.#camera, this.#canvas);
       this.#controls.enableDamping = true;
+      this.#controls.target.set(0, 30, 0);
+      this.#controls.update();
     }
   }
 

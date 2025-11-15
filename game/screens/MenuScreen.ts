@@ -30,6 +30,7 @@ export class MenuScreen {
     this.#debug = Debug.getInstance();
 
     this.#group = new Group();
+    this.#group.position.set(0, 30, 0);
     this.#scene.add(this.#group);
 
     this.#stageActor.subscribe((state) => {

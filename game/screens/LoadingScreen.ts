@@ -24,6 +24,8 @@ export class LoadingScreen {
     this.#resources = Resources.getInstance();
 
     this.#group = new Group();
+    this.#group.position.set(0, 30, 0);
+
     this.#scene.add(this.#group);
 
     // TODO Improve this naive implementation
@@ -58,7 +60,7 @@ export class LoadingScreen {
       size: 1.2,
       material: this.#material,
     });
-    this.#mesh.position.set(0, 6, 0);
+    this.#mesh.position.set(0, 0, 0);
     this.#group.add(this.#mesh);
   }
 
