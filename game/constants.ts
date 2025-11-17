@@ -23,9 +23,14 @@ export const BACKGROUND_COLOR_R = '51';
 export const BACKGROUND_COLOR_G = '51';
 export const BACKGROUND_COLOR_B = '51';
 
-export const VEHICLE_SIZE = 3;
-export const OBSTACLE_VEHICLE_SIZE_DIFF = 0.5;
+export const TILE_SIZE = 1;
+export const PLAYER_SIZE = 1;
+export const BENCH_HEIGHT = 0.5;
 
+/**
+ * 0 = Floor
+ * 1 = Bench
+ */
 export const LEVEL_1_MATRIX = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],

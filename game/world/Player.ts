@@ -1,5 +1,6 @@
 import { type Group, Mesh, MeshBasicMaterial, PlaneGeometry, type Scene, SRGBColorSpace } from 'three';
 
+import { PLAYER_SIZE } from '../constants';
 import { Debug } from '../utils/Debug';
 import { InputController } from '../utils/InputController';
 import { Resources } from '../utils/Resources';
@@ -12,10 +13,8 @@ export class Player {
   #mesh: Mesh | null = null;
 
   #properties = {
-    width: 1,
-    height: 1,
-    depth: 0.1,
-    radius: 0.4,
+    width: PLAYER_SIZE,
+    height: PLAYER_SIZE,
     minX: -10,
     maxX: 10,
     minZ: -10,

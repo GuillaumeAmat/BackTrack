@@ -1,18 +1,17 @@
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial, PlaneGeometry, type Scene } from 'three';
 
-import { LEVEL_1_MATRIX, MOODS } from '../constants';
+import { BENCH_HEIGHT, LEVEL_1_MATRIX, MOODS, TILE_SIZE } from '../constants';
 import { Debug } from '../utils/Debug';
 
 export class Level {
   #screenGroup: Group;
   #scene: Scene;
-  #group: Group | null = null;
+  #group: Group;
   #meshes: Mesh[] = [];
 
   #properties = {
-    width: 1,
-    height: 0.5,
-    depth: 1,
+    tileSize: TILE_SIZE,
+    benchHeight: BENCH_HEIGHT,
   };
 
   #debug: Debug;
@@ -24,6 +23,9 @@ export class Level {
     this.#screenGroup = screenGroup;
     this.#scene = scene;
     this.#debug = Debug.getInstance();
+
+    this.#group = new Group();
+    this.#screenGroup.add(this.#group);
 
     this.createFloor();
     this.createBench();
@@ -44,11 +46,11 @@ export class Level {
     mesh.rotation.x = Math.PI * -0.5;
     mesh.position.y = 0;
 
-    this.#screenGroup.add(mesh);
+    this.#group.add(mesh);
   }
 
   private createBench() {
-    const { width, height, depth } = this.#properties;
+    const { tileSize, benchHeight } = this.#properties;
 
     const material = new MeshStandardMaterial({
       color: MOODS['light-tangaroa-20'].value,
@@ -56,7 +58,7 @@ export class Level {
       roughness: 0.5,
     });
 
-    const meshReference = new Mesh(new BoxGeometry(width, height, depth), material);
+    const meshReference = new Mesh(new BoxGeometry(tileSize, benchHeight, tileSize), material);
     meshReference.castShadow = true;
 
     for (let xIndex = 0; xIndex < 13; xIndex++) {
@@ -74,9 +76,7 @@ export class Level {
       }
     }
 
-    this.#group = new Group();
     this.#group.add(...this.#meshes);
-    this.#screenGroup.add(this.#group);
   }
 
   private async setupHelpers() {
