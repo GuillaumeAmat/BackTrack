@@ -2,24 +2,25 @@ import { Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
 import type { Actor, AnyActorLogic } from 'xstate';
 
 import { createTextMesh } from '../lib/createTextMesh';
+import { InputController } from '../utils/InputController';
 import { Resources } from '../utils/Resources';
 
 export class StartScreen {
   #stageActor: Actor<AnyActorLogic>;
   #scene: Scene;
   #resources: Resources;
+  #inputController: InputController;
 
   #group: Group;
   #titleMesh: Mesh | null = null;
   #promptMesh: Mesh | null = null;
   #material: MeshStandardMaterial;
 
-  #boundOnKeyUp: (event: KeyboardEvent) => void;
-
   constructor(stageActor: Actor<AnyActorLogic>, scene: Scene) {
     this.#stageActor = stageActor;
     this.#scene = scene;
     this.#resources = Resources.getInstance();
+    this.#inputController = new InputController();
 
     this.#group = new Group();
     this.#group.position.set(0, 30, 0);
@@ -38,9 +39,6 @@ export class StartScreen {
       metalness: 0.3,
       roughness: 0.4,
     });
-
-    // TODO Improve that...
-    this.#boundOnKeyUp = this.onKeyUp.bind(this);
 
     this.createText();
   }
@@ -70,21 +68,13 @@ export class StartScreen {
   }
 
   private show() {
-    this.registerControls();
+    this.#inputController.onKeyUp(() => this.onKeyUp());
     this.#group.visible = true;
   }
 
   private hide() {
+    this.#inputController.cleanup();
     this.#group.visible = false;
-    this.unregisterControls();
-  }
-
-  private registerControls() {
-    window.addEventListener('keyup', this.#boundOnKeyUp);
-  }
-
-  private unregisterControls() {
-    window.removeEventListener('keyup', this.#boundOnKeyUp);
   }
 
   private onKeyUp() {

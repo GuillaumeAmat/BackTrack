@@ -4,6 +4,7 @@ import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
 import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
 // import { MOODS } from '../constants';
 import { Debug } from '../utils/Debug';
+import { InputController } from '../utils/InputController';
 
 const material = new MeshStandardMaterial({
   color: '#FC3BAB',
@@ -30,6 +31,7 @@ export class Vehicle {
   };
 
   #debug: Debug;
+  #inputController: InputController;
   #debugProperties = {
     DisplayHelper: true,
   };
@@ -46,11 +48,12 @@ export class Vehicle {
     this.#screenGroup = screenGroup;
     this.#scene = scene;
     this.#debug = Debug.getInstance();
+    this.#inputController = new InputController();
 
     this.createMesh();
     this.setupHelpers();
 
-    window.addEventListener('keyup', (event) => this.#onKeyUp(event));
+    this.#inputController.onKeyUp((event) => this.#onKeyUp(event));
   }
 
   private createMesh() {
