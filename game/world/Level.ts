@@ -1,29 +1,18 @@
-import { DoubleSide, Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
+import { BoxGeometry, Group, Mesh, MeshStandardMaterial, PlaneGeometry, type Scene } from 'three';
 
-import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
-import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
-// import { MOODS } from '../constants';
+import { LEVEL_1_MATRIX, MOODS } from '../constants';
 import { Debug } from '../utils/Debug';
 
-const material = new MeshStandardMaterial({
-  color: '#6FFCDC',
-  // color: MOODS['mindaro-94'].value,
-  metalness: 0.3,
-  roughness: 0.4,
-  side: DoubleSide,
-});
-
-export class Obstacle {
+export class Level {
   #screenGroup: Group;
   #scene: Scene;
   #group: Group | null = null;
   #meshes: Mesh[] = [];
 
   #properties = {
-    width: VEHICLE_SIZE - OBSTACLE_VEHICLE_SIZE_DIFF,
-    height: VEHICLE_SIZE - OBSTACLE_VEHICLE_SIZE_DIFF,
-    depth: VEHICLE_SIZE - OBSTACLE_VEHICLE_SIZE_DIFF,
-    radius: 0.4,
+    width: 1,
+    height: 0.5,
+    depth: 1,
   };
 
   #debug: Debug;
@@ -36,26 +25,50 @@ export class Obstacle {
     this.#scene = scene;
     this.#debug = Debug.getInstance();
 
-    this.createGroup();
+    this.createFloor();
+    this.createBench();
     this.setupHelpers();
   }
 
-  private createGroup() {
-    const { width, height, radius, depth } = this.#properties;
+  private createFloor() {
+    const geometry = new PlaneGeometry(LEVEL_1_MATRIX[0]?.length, LEVEL_1_MATRIX.length, 1, 1);
 
-    const meshReference = createRoundedPlaneMesh(width, height, radius, {
-      extrusionDepth: depth,
-      material,
+    const material = new MeshStandardMaterial({
+      color: MOODS['mindaro-94'].value,
+      metalness: 0.1,
+      roughness: 0.5,
     });
 
-    meshReference.castShadow = true;
-    meshReference.position.z = -15;
+    const mesh = new Mesh(geometry, material);
+    mesh.receiveShadow = true;
+    mesh.rotation.x = Math.PI * -0.5;
+    mesh.position.y = 0;
 
-    for (let xIndex = 0; xIndex < 3; xIndex++) {
-      for (let yIndex = 0; yIndex < 3; yIndex++) {
+    this.#screenGroup.add(mesh);
+  }
+
+  private createBench() {
+    const { width, height, depth } = this.#properties;
+
+    const material = new MeshStandardMaterial({
+      color: MOODS['light-tangaroa-20'].value,
+      metalness: 0.1,
+      roughness: 0.5,
+    });
+
+    const meshReference = new Mesh(new BoxGeometry(width, height, depth), material);
+    meshReference.castShadow = true;
+
+    for (let xIndex = 0; xIndex < 13; xIndex++) {
+      for (let zIndex = 0; zIndex < 9; zIndex++) {
         const mesh = meshReference.clone();
-        mesh.position.x = xIndex * VEHICLE_SIZE - VEHICLE_SIZE;
-        mesh.position.y = yIndex * VEHICLE_SIZE + (VEHICLE_SIZE / 2 + OBSTACLE_VEHICLE_SIZE_DIFF);
+
+        if (LEVEL_1_MATRIX?.[zIndex]?.[xIndex] === 0) {
+          continue;
+        }
+
+        mesh.position.x = xIndex - Math.floor(13 / 2);
+        mesh.position.z = zIndex - Math.floor(9 / 2);
 
         this.#meshes.push(mesh);
       }
@@ -68,7 +81,7 @@ export class Obstacle {
 
   private async setupHelpers() {
     if (this.#debug.active) {
-      const folderName = 'Obstacle';
+      const folderName = 'Level';
       const guiFolder = this.#debug.gui.addFolder(folderName);
 
       this.#debugProperties = {

@@ -1,33 +1,25 @@
-import { DoubleSide, type Group, type Mesh, MeshStandardMaterial, type Scene } from 'three';
+import { type Group, Mesh, MeshBasicMaterial, PlaneGeometry, type Scene, SRGBColorSpace } from 'three';
 
-import { OBSTACLE_VEHICLE_SIZE_DIFF, VEHICLE_SIZE } from '../constants';
-import { createRoundedPlaneMesh } from '../lib/createRoundedPlaneMesh';
-// import { MOODS } from '../constants';
 import { Debug } from '../utils/Debug';
 import { InputController } from '../utils/InputController';
+import { Resources } from '../utils/Resources';
 
-const material = new MeshStandardMaterial({
-  color: '#FC3BAB',
-  // color: MOODS['mindaro-94'].value,
-  metalness: 0.3,
-  roughness: 0.4,
-  side: DoubleSide,
-});
-
-export class Vehicle {
+export class Player {
   #screenGroup: Group;
   #scene: Scene;
+  #resources: Resources;
+
   #mesh: Mesh | null = null;
 
   #properties = {
-    width: VEHICLE_SIZE,
-    height: VEHICLE_SIZE,
-    depth: VEHICLE_SIZE,
+    width: 1,
+    height: 1,
+    depth: 0.1,
     radius: 0.4,
-    minX: -VEHICLE_SIZE,
-    maxX: VEHICLE_SIZE,
-    minY: VEHICLE_SIZE / 2 + OBSTACLE_VEHICLE_SIZE_DIFF,
-    maxY: VEHICLE_SIZE / 2 + OBSTACLE_VEHICLE_SIZE_DIFF + 2 * VEHICLE_SIZE,
+    minX: -10,
+    maxX: 10,
+    minZ: -10,
+    maxZ: 10,
   };
 
   #debug: Debug;
@@ -41,12 +33,10 @@ export class Vehicle {
   }
 
   constructor(screenGroup: Group, scene: Scene) {
-    if (!window) {
-      throw new Error('"Vehicle" can only be instanciated in a browser environment.');
-    }
-
     this.#screenGroup = screenGroup;
     this.#scene = scene;
+    this.#resources = Resources.getInstance();
+
     this.#debug = Debug.getInstance();
     this.#inputController = new InputController();
 
@@ -57,24 +47,36 @@ export class Vehicle {
   }
 
   private createMesh() {
-    const { width, height, radius, depth, minY } = this.#properties;
+    const { width, height } = this.#properties;
 
-    this.#mesh = createRoundedPlaneMesh(width, height, radius, {
-      extrusionDepth: depth,
-      material,
+    const playerTexture = this.#resources.getTextureAsset('playerTexture');
+
+    if (!playerTexture) {
+      return;
+    }
+
+    playerTexture.colorSpace = SRGBColorSpace;
+
+    const material = new MeshBasicMaterial({
+      map: playerTexture,
+      alphaTest: 0.5,
     });
 
-    this.#mesh.castShadow = true;
+    const geometry = new PlaneGeometry(width, height, 10, 10);
+    geometry.translate(0, height / 2, 0);
+    this.#mesh = new Mesh(geometry, material);
+
     this.#mesh.position.x = 0;
-    this.#mesh.position.z = 0;
-    this.#mesh.position.y = minY;
+    this.#mesh.position.y = 0;
+    this.#mesh.position.z = 2;
+    this.#mesh.rotation.x = Math.PI * -0.25;
 
     this.#screenGroup.add(this.#mesh);
   }
 
   private async setupHelpers() {
     if (this.#debug.active) {
-      const folderName = 'Vehicle';
+      const folderName = 'Player';
       const guiFolder = this.#debug.gui.addFolder(folderName);
 
       this.#debugProperties = {
@@ -100,16 +102,16 @@ export class Vehicle {
     if (!this.#mesh) {
       return;
     }
-    const { width, height, minX, maxX, minY, maxY } = this.#properties;
+    const { width, height, minX, maxX, minZ, maxZ } = this.#properties;
 
     if (['ArrowLeft', 'KeyA', 'KeyQ'].includes(event.code)) {
       this.#mesh.position.x = Math.max(this.#mesh.position.x - width, minX);
     } else if (['ArrowRight', 'KeyD'].includes(event.code)) {
       this.#mesh.position.x = Math.min(this.#mesh.position.x + width, maxX);
     } else if (['ArrowUp', 'KeyW', 'KeyZ'].includes(event.code)) {
-      this.#mesh.position.y = Math.min(this.#mesh.position.y + height, maxY);
+      this.#mesh.position.z = Math.min(this.#mesh.position.z - height, maxZ);
     } else if (['ArrowDown', 'KeyS'].includes(event.code)) {
-      this.#mesh.position.y = Math.max(this.#mesh.position.y - height, minY);
+      this.#mesh.position.z = Math.max(this.#mesh.position.z + height, minZ);
     }
   }
 

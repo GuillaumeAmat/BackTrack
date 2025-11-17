@@ -37,12 +37,15 @@ export class Environment {
     const ambientLight = new AmbientLight('#ffffff', 1);
     this.#scene.add(ambientLight);
 
-    this.#sunLight = new DirectionalLight('#ffffff', 4);
+    this.#sunLight = new DirectionalLight('#ffffff', 1);
     this.#sunLight.castShadow = true;
     this.#sunLight.shadow.camera.far = 15;
-    this.#sunLight.shadow.mapSize.set(1024, 1024);
-    this.#sunLight.shadow.normalBias = 0.05;
-    this.#sunLight.position.set(20, 20, 20);
+    this.#sunLight.shadow.mapSize.set(2048, 2048);
+    // this.#sunLight.shadow.normalBias = 0.05;
+    this.#sunLight.shadow.camera.left = -10;
+    this.#sunLight.shadow.camera.right = 10;
+
+    this.#sunLight.position.set(0, 10, -10);
 
     this.#scene.add(this.#sunLight);
   }

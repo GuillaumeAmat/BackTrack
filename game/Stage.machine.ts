@@ -150,7 +150,9 @@ export const stageMachine = setup({
     Loading: {
       invoke: {
         src: 'waitForLowPriorityResources',
-        onDone: 'Start',
+        // FIXME
+        // onDone: 'Start',
+        onDone: 'Level',
         onError: 'Loading error',
       },
 
