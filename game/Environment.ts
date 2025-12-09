@@ -45,7 +45,7 @@ export class Environment {
     this.#sunLight.shadow.camera.left = -10;
     this.#sunLight.shadow.camera.right = 10;
 
-    this.#sunLight.position.set(0, 10, -10);
+    this.#sunLight.position.set(0, 10, -1);
 
     this.#scene.add(this.#sunLight);
   }

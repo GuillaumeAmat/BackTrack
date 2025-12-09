@@ -84,6 +84,11 @@ export class Stage {
         path: '/game/player.png',
         priority: 'low',
       },
+      benchModel: {
+        type: 'gltf',
+        path: '/game/bench.glb',
+        priority: 'low',
+      },
       // bmLogo: {
       //   type: 'svg',
       //   path: '/game/svg/bmLogo.svg',

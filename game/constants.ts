@@ -25,7 +25,8 @@ export const BACKGROUND_COLOR_B = '51';
 
 export const TILE_SIZE = 1;
 export const PLAYER_SIZE = 1;
-export const BENCH_HEIGHT = 0.5;
+export const WALL_HEIGHT = 1;
+export const WALL_DEPTH = 0.3;
 
 /**
  * 0 = Floor
