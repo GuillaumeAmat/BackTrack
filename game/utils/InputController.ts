@@ -1,6 +1,9 @@
 export class InputController {
-  #callback: ((event: KeyboardEvent) => void) | null = null;
+  #keyUpCallback: ((event: KeyboardEvent) => void) | null = null;
   #boundKeyUpHandler: (event: KeyboardEvent) => void;
+  #boundKeyDownHandler: (event: KeyboardEvent) => void;
+
+  #keysPressed = new Set<string>();
 
   constructor() {
     if (!window) {
@@ -8,21 +11,36 @@ export class InputController {
     }
 
     this.#boundKeyUpHandler = this.#handleKeyUp.bind(this);
+    this.#boundKeyDownHandler = this.#handleKeyDown.bind(this);
+
     window.addEventListener('keyup', this.#boundKeyUpHandler);
+    window.addEventListener('keydown', this.#boundKeyDownHandler);
   }
 
   public onKeyUp(callback: (event: KeyboardEvent) => void) {
-    this.#callback = callback;
+    this.#keyUpCallback = callback;
+  }
+
+  public isKeyPressed(key: string): boolean {
+    return this.#keysPressed.has(key);
   }
 
   public cleanup() {
     window.removeEventListener('keyup', this.#boundKeyUpHandler);
-    this.#callback = null;
+    window.removeEventListener('keydown', this.#boundKeyDownHandler);
+    this.#keyUpCallback = null;
+    this.#keysPressed.clear();
   }
 
   #handleKeyUp(event: KeyboardEvent) {
-    if (this.#callback) {
-      this.#callback(event);
+    this.#keysPressed.delete(event.code);
+
+    if (this.#keyUpCallback) {
+      this.#keyUpCallback(event);
     }
+  }
+
+  #handleKeyDown(event: KeyboardEvent) {
+    this.#keysPressed.add(event.code);
   }
 }

@@ -1,7 +1,8 @@
-import { BoxGeometry, Group, Mesh, MeshStandardMaterial, PlaneGeometry, type Scene } from 'three';
+import { BoxGeometry, Group, Mesh, MeshStandardMaterial, PlaneGeometry, type Scene, Vector3 } from 'three';
 
 import { LEVEL_1_MATRIX, TILE_SIZE, WALL_DEPTH, WALL_HEIGHT } from '../constants';
 import { Debug } from '../utils/Debug';
+import { Physics } from '../utils/Physics';
 import { Resources } from '../utils/Resources';
 
 export class Level {
@@ -9,6 +10,7 @@ export class Level {
   #scene: Scene;
   #resources: Resources;
   #group: Group;
+  #physics: Physics;
 
   #properties = {
     tileSize: TILE_SIZE,
@@ -26,6 +28,7 @@ export class Level {
     this.#scene = scene;
     this.#resources = Resources.getInstance();
     this.#debug = Debug.getInstance();
+    this.#physics = Physics.getInstance();
 
     this.#group = new Group();
     this.#screenGroup.add(this.#group);
@@ -33,6 +36,7 @@ export class Level {
     this.createFloor();
     this.createBench();
     this.createWall();
+    this.createPhysicsBodies();
     this.setupHelpers();
   }
 
@@ -166,6 +170,93 @@ export class Level {
     }
 
     this.#group.add(...meshes);
+  }
+
+  private createPhysicsBodies() {
+    if (!Array.isArray(LEVEL_1_MATRIX) || !LEVEL_1_MATRIX[0]) {
+      return;
+    }
+
+    const levelWidth = LEVEL_1_MATRIX[0].length;
+    const levelDepth = LEVEL_1_MATRIX.length;
+
+    // Create floor physics body
+    const floorPosition = new Vector3(0, -0.1, 0);
+    const floorRigidBody = this.#physics.createStaticRigidBody(floorPosition);
+    const floorHalfExtents = new Vector3(levelWidth / 2, 0.1, levelDepth / 2);
+    this.#physics.createBoxCollider(floorRigidBody, floorHalfExtents, 0.5);
+
+    // Create merged bench physics bodies to eliminate seams
+    this.createMergedBenchBodies(levelWidth, levelDepth);
+  }
+
+  private createMergedBenchBodies(levelWidth: number, levelDepth: number) {
+    const processed = Array.from({ length: levelDepth }, () => Array(levelWidth).fill(false));
+
+    for (let zIndex = 0; zIndex < levelDepth; zIndex++) {
+      for (let xIndex = 0; xIndex < levelWidth; xIndex++) {
+        if (LEVEL_1_MATRIX[zIndex]?.[xIndex] === 1 && !processed[zIndex]?.[xIndex]) {
+          // Find the extent of this contiguous rectangular region
+          const rect = this.findLargestRectangle(xIndex, zIndex, levelWidth, levelDepth, processed);
+
+          if (rect.width > 0 && rect.height > 0) {
+            // Create a single physics body for this rectangular region
+            // Align with visual bench positioning: rect coordinates to world coordinates
+            const centerX = rect.x + (rect.width - 1) / 2 - Math.floor(levelWidth / 2);
+            const centerZ = rect.z + (rect.height - 1) / 2 - Math.floor(levelDepth / 2);
+
+            const position = new Vector3(centerX, 0.5, centerZ);
+            const rigidBody = this.#physics.createStaticRigidBody(position);
+            const halfExtents = new Vector3(rect.width / 2, 0.5, rect.height / 2);
+            this.#physics.createBoxCollider(rigidBody, halfExtents, 0.0);
+
+            // Mark all tiles in this rectangle as processed
+            for (let z = rect.z; z < rect.z + rect.height; z++) {
+              for (let x = rect.x; x < rect.x + rect.width; x++) {
+                processed[z]![x] = true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private findLargestRectangle(
+    startX: number,
+    startZ: number,
+    levelWidth: number,
+    levelDepth: number,
+    processed: boolean[][],
+  ): { x: number; z: number; width: number; height: number } {
+    // Find the maximum width starting from this position
+    let maxWidth = 0;
+    for (let x = startX; x < levelWidth; x++) {
+      if (LEVEL_1_MATRIX[startZ]?.[x] === 1 && !processed[startZ]?.[x]) {
+        maxWidth++;
+      } else {
+        break;
+      }
+    }
+
+    // Now find the maximum height for this width
+    let maxHeight = 0;
+    for (let z = startZ; z < levelDepth; z++) {
+      let canExtend = true;
+      for (let x = startX; x < startX + maxWidth; x++) {
+        if (LEVEL_1_MATRIX[z]?.[x] !== 1 || processed[z]?.[x]) {
+          canExtend = false;
+          break;
+        }
+      }
+      if (canExtend) {
+        maxHeight++;
+      } else {
+        break;
+      }
+    }
+
+    return { x: startX, z: startZ, width: maxWidth, height: maxHeight };
   }
 
   private async setupHelpers() {

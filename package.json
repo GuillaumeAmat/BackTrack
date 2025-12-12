@@ -12,6 +12,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.19.3",
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/image": "^1.11.0",
     "@nuxt/scripts": "^0.11.13",

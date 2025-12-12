@@ -385,6 +385,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dimforge/rapier3d-compat@npm:^0.19.3":
+  version: 0.19.3
+  resolution: "@dimforge/rapier3d-compat@npm:0.19.3"
+  checksum: 10/b2dd0b7b14a8546c1db4f88b31816dc3b1d7db3940b3bc156fe1b3ea8ee3849bd294dd16774ebed2dd67baabf434d95b45891a35adfd601bcce2304d73c42289
+  languageName: node
+  linkType: hard
+
 "@dimforge/rapier3d-compat@npm:~0.12.0":
   version: 0.12.0
   resolution: "@dimforge/rapier3d-compat@npm:0.12.0"
@@ -4023,6 +4030,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backtrack@workspace:."
   dependencies:
+    "@dimforge/rapier3d-compat": "npm:^0.19.3"
     "@iconify-json/simple-icons": "npm:^1.2.45"
     "@nuxt/eslint": "npm:^1.9.0"
     "@nuxt/image": "npm:^1.11.0"

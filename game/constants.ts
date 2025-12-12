@@ -27,6 +27,7 @@ export const TILE_SIZE = 1;
 export const PLAYER_SIZE = 1;
 export const WALL_HEIGHT = 1;
 export const WALL_DEPTH = 0.3;
+export const MOVEMENT_SPEED = 5;
 
 /**
  * 0 = Floor
