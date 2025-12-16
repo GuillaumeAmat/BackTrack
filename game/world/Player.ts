@@ -1,5 +1,6 @@
 import RAPIER from '@dimforge/rapier3d-compat';
-import { type Group, Mesh, MeshBasicMaterial, PlaneGeometry, type Scene, SRGBColorSpace, Vector3 } from 'three';
+import { type Group, MathUtils, Mesh, type Object3D, type Scene, Vector3 } from 'three';
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import { MOVEMENT_SPEED, PLAYER_SIZE } from '../constants';
 import { Debug } from '../utils/Debug';
@@ -13,8 +14,11 @@ export class Player {
   #resources: Resources;
   #physics: Physics;
 
-  #mesh: Mesh | null = null;
+  #mesh: Object3D | null = null;
   #rigidBody: RAPIER.RigidBody | null = null;
+
+  #currentRotationY = 0;
+  #targetRotationY = 0;
 
   #properties = {
     width: PLAYER_SIZE,
@@ -47,29 +51,27 @@ export class Player {
   }
 
   private createMesh() {
-    const { width, height } = this.#properties;
+    const duckModel = this.#resources.getGLTFAsset('duckModel');
 
-    const playerTexture = this.#resources.getTextureAsset('playerTexture');
-
-    if (!playerTexture) {
+    if (!duckModel) {
       return;
     }
 
-    playerTexture.colorSpace = SRGBColorSpace;
+    this.#mesh = duckModel.scene.clone();
 
-    const material = new MeshBasicMaterial({
-      map: playerTexture,
-      alphaTest: 0.5,
+    // Scale to match PLAYER_SIZE
+    this.#mesh.scale.setScalar(1);
+
+    // Position on floor plane
+    this.#mesh.position.set(0, 0.1, 2);
+
+    // Enable shadows
+    this.#mesh.traverse((child) => {
+      if (child instanceof Mesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
     });
-
-    const geometry = new PlaneGeometry(width, height, 10, 10);
-    geometry.translate(0, height / 2, 0);
-    this.#mesh = new Mesh(geometry, material);
-
-    this.#mesh.position.x = 0;
-    this.#mesh.position.y = 0;
-    this.#mesh.position.z = 2;
-    this.#mesh.rotation.x = Math.PI * -0.25;
 
     this.#screenGroup.add(this.#mesh);
   }
@@ -77,7 +79,7 @@ export class Player {
   private createPhysicsBody() {
     if (!this.#mesh) return;
 
-    const initialPosition = new Vector3(0, 0.5, 2);
+    const initialPosition = new Vector3(0, 0.1, 2);
     this.#rigidBody = this.#physics.createDynamicRigidBody(initialPosition);
 
     const radius = this.#properties.width / 2;
@@ -154,6 +156,34 @@ export class Player {
     this.#rigidBody.setLinvel(forceVector, true);
   }
 
+  private updateRotation() {
+    if (!this.#mesh || !this.#rigidBody) return;
+
+    const velocity = this.#rigidBody.linvel();
+    const vx = velocity.x;
+    const vz = velocity.z;
+
+    // Update target rotation when moving
+    const isMoving = Math.abs(vx) > 0.01 || Math.abs(vz) > 0.01;
+
+    if (isMoving) {
+      // Calculate angle from velocity (atan2 for XZ plane = Y-rotation)
+      // Negate vz because Z-axis is inverted (negative Z = forward)
+      this.#targetRotationY = Math.atan2(-vz, vx);
+    }
+
+    // Smooth interpolation with angle wrapping
+    let angleDiff = this.#targetRotationY - this.#currentRotationY;
+
+    // Normalize to [-PI, PI] for shortest rotation path
+    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+
+    this.#currentRotationY += angleDiff * 0.15;
+
+    this.#mesh.rotation.y = this.#currentRotationY;
+  }
+
   private syncMeshWithPhysics() {
     if (!this.#mesh || !this.#rigidBody) return;
 
@@ -163,6 +193,7 @@ export class Player {
 
   public update() {
     this.updateMovement();
+    this.updateRotation();
     this.syncMeshWithPhysics();
   }
 }

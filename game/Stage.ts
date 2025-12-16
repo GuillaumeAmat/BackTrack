@@ -84,6 +84,11 @@ export class Stage {
         path: '/game/player.png',
         priority: 'low',
       },
+      duckModel: {
+        type: 'gltf',
+        path: '/game/Duck.gltf',
+        priority: 'low',
+      },
       benchModel: {
         type: 'gltf',
         path: '/game/bench.glb',
